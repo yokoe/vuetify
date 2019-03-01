@@ -1,0 +1,32 @@
+{
+  "title": "header",
+  "titleText": "headerText",
+  "mdLink": "https://material.io/design/environment/elevation.html",
+  "children": [
+    {
+      "type": "section",
+      "children": [
+        {
+          "type": "heading",
+          "lang": "playgroundHeader"
+        },
+        {
+          "type": "example",
+          "value": "playground"
+        }
+      ]
+    },
+    {
+      "type": "section",
+      "children": [
+        {
+          "type": "up-next",
+          "value": [
+            "components/cards",
+            "components/sheets"
+          ]
+        }
+      ]
+    }
+  ]
+}

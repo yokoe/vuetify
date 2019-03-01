@@ -1,0 +1,59 @@
+{
+  "title": "header",
+  "titleText": "headerText",
+  "mdLink": "https://material.io/design/components/chips.html",
+  "children": [
+    {
+      "type": "section",
+      "children": [
+        {
+          "type": "usage",
+          "value": "usage"
+        }
+      ]
+    },
+    {
+      "type": "section",
+      "children": [
+        {
+          "type": "api",
+          "value": ["v-chip"]
+        }
+      ]
+    },
+    {
+      "type": "section",
+      "children": [
+        {
+          "type": "examples",
+          "value": [
+            "playground",
+            "photos",
+            "actionChips",
+            "filtering",
+            "colored",
+            "icon",
+            "outline",
+            "label",
+            "closable",
+            "expandable",
+            "inSelects"
+          ]
+        }
+      ]
+    },
+    {
+      "type": "section",
+      "children": [
+        {
+          "type": "up-next",
+          "value": [
+            "components/avatars",
+            "components/icons",
+            "components/selects"
+          ]
+        }
+      ]
+    }
+  ]
+}

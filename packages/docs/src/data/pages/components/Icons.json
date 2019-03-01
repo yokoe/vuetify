@@ -1,0 +1,53 @@
+{
+  "title": "header",
+  "titleText": "headerText",
+  "mdLink": "https://material.io/design/iconography/system-icons.html",
+  "children": [
+    {
+      "type": "section",
+      "children": [
+        {
+          "type": "usage",
+          "value": "usage"
+        }
+      ]
+    },
+    {
+      "type": "section",
+      "children": [
+        {
+          "type": "api",
+          "value": ["v-icon"]
+        }
+      ]
+    },
+    {
+      "type": "section",
+      "children": [
+        {
+          "type": "examples",
+          "value": [
+            "fontAwesome",
+            "mdi",
+            "color",
+            "buttons",
+            "clickable"
+          ]
+        }
+      ]
+    },
+    {
+      "type": "section",
+      "children": [
+        {
+          "type": "up-next",
+          "value": [
+            "framework/icons",
+            "components/buttons",
+            "components/cards"
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,5 @@
+@mixin bootable()
+  transition: none
+
+  &[data-booted="true"]
+    transition: $bootable-transition

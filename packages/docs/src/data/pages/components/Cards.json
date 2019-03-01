@@ -1,0 +1,64 @@
+{
+  "title": "header",
+  "titleText": "headerText",
+  "mdLink": "https://material.io/design/components/cards.html",
+  "children": [
+    {
+      "type": "section",
+      "children": [
+        {
+          "type": "usage",
+          "value": "usage"
+        }
+      ]
+    },
+    {
+      "type": "section",
+      "children": [
+        {
+          "type": "alert",
+          "lang": "cardMediaWarning",
+          "value": "warning"
+        },
+        {
+          "type": "api",
+          "value": [
+            "v-card",
+            "v-card-actions",
+            "v-card-media",
+            "v-card-text",
+            "v-card-title"
+          ]
+        }
+      ]
+    },
+    {
+      "type": "section",
+      "children": [
+        {
+          "type": "examples",
+          "value": [
+            "mediaWithText",
+            "horizontal",
+            "grids",
+            "customActions",
+            "twitterCard"
+          ]
+        }
+      ]
+    },
+    {
+      "type": "section",
+      "children": [
+        {
+          "type": "up-next",
+          "value": [
+            "components/buttons",
+            "components/images",
+            "framework/typography"
+          ]
+        }
+      ]
+    }
+  ]
+}
