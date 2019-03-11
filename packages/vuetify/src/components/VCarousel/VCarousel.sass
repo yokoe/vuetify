@@ -1,15 +1,21 @@
-@import '../bootstrap'
+@import '../../styles/styles.sass'
+@import './_mixins.sass'
 
-v-carousel-rtl()
-  &__prev
-    left: auto
-    right: 5px
+.v-carousel.theme--light
+  +carousel-theme($material-light)
+.v-carousel.theme--dark
+  +carousel-theme($material-dark)
 
-  &__next
-    left: 5px
-    right: auto
+// v-carousel-rtl()
+//   &__prev
+//     left: auto
+//     right: 5px
 
-rtl(v-carousel-rtl, "v-carousel")
+//   &__next
+//     left: 5px
+//     right: auto
+
+// rtl(v-carousel-rtl, "v-carousel")
 
 .v-carousel
   width: 100%
