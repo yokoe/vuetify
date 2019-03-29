@@ -44,6 +44,15 @@ $display-breakpoints: (
   'xl-only': 'only screen and (min-width: #{map-get($grid-breakpoints, 'xl')})'
 ) !default;
 
+$display-types: (
+  'none',
+  'inline',
+  'inline-block',
+  'block',
+  'flex',
+  'inline-flex'
+) !default;
+
 $spacer: 16px !default;
 $spacer-x: $spacer !default;
 $spacer-y: $spacer !default;

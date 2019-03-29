@@ -4,11 +4,12 @@
       @media #{$media_query}
         display: none !important
 
-.overflow-hidden
-  overflow: hidden
+@each $size, $width in $grid-breakpoints
+  @media all and (min-width: $width)
+    @each $display in $display-types
+      .d-#{$size}-#{$display}
+        display: #{$display} !important
 
-.overflow-x-hidden
-  overflow-x: hidden
-
-.overflow-y-hidden
-  overflow-y: hidden
+@each $display in $display-types
+  .d-#{$display}
+    display: #{$display} !important
