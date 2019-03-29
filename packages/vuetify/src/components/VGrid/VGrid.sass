@@ -3,19 +3,11 @@
 .container
   flex: 1 1 100%
   margin: auto
-  padding: map-get($grid-gutters, 'xl')
   width: 100%
-
-  &.grow-shrink-0
-    flex-grow: 0
-    flex-shrink: 0
 
   @each $size, $width in $container-max-widths
     @media only screen and (min-width: $width)
       max-width: ($width * 0.9375) // Credit to bootstrap
-
-  @media #{map-get($display-breakpoints, 'sm-and-down')}
-    padding: map-get($grid-gutters, 'lg')
 
   &.fluid
     max-width: 100%
@@ -28,34 +20,23 @@
       height: 100%
       flex: 1 1 auto
 
-      &.grow-shrink-0
-        flex-grow: 0
-        flex-shrink: 0
-
   &.grid-list
     @each $size, $gutter in $grid-gutters
       &-#{$size}
-        .layout
+        > .layout
           .flex
             padding: ($gutter / 2)
 
-        .layout:only-child
+        > .layout:only-child
           margin: -($gutter / 2)
 
-        .layout:not(:only-child)
+        > .layout:not(:only-child)
           margin: auto -($gutter / 2)
-
-        *:not(:only-child)
-          .layout:first-child
-            margin-top: -($gutter / 2)
-
-          .layout:last-child
-            margin-bottom: -($gutter / 2)
 
 .layout
   display: flex
   flex: 1 1 auto
-  flex-wrap: nowrap
+  flex-wrap: wrap
   // https://github.com/vuetifyjs/vuetify/issues/3873
   min-width: 0
 
@@ -74,12 +55,8 @@
     > .flex
       max-width: 100%
 
-  &.wrap
-    flex-wrap: wrap
-
-  &.grow-shrink-0
-    flex-grow: 0
-    flex-shrink: 0
+  &.no-wrap
+    flex-wrap: nowrap
 
 @each $size, $width in $grid-breakpoints
   @media all and (min-width: $width)
@@ -96,12 +73,6 @@
       .flex.offset-#{$size}#{$n}
         // Offsets can only ever work in row layouts
         margin-left: $n / $grid-columns * 100%
-
-.flex,
-.child-flex > *
-  &.grow-shrink-0
-    flex-grow: 0
-    flex-shrink: 0
 
 .spacer
   flex-grow: 1 !important
