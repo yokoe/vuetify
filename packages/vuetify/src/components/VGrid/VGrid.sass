@@ -2,12 +2,19 @@
 
 .container
   flex: 1 1 100%
+  padding: map-get($grid-gutters, 'xl')
   margin: auto
   width: 100%
+
+  .container
+    padding: 0
 
   @each $size, $width in $container-max-widths
     @media only screen and (min-width: $width)
       max-width: ($width * 0.9375) // Credit to bootstrap
+
+  @media #{map-get($display-breakpoints, 'sm-and-down')}
+    padding: map-get($grid-gutters, 'lg')
 
   &.fluid
     max-width: 100%

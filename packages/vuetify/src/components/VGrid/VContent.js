@@ -23,13 +23,11 @@ export default {
         bar, top, right, footer, insetFooter, bottom, left
       } = this.$vuetify.application
 
-      const offset = this.$vuetify.breakpoint.mdAndUp ? 24 : 16
-
       return {
-        paddingTop: `${top + bar + offset}px`,
-        paddingRight: `${right + offset}px`,
-        paddingBottom: `${footer + insetFooter + bottom + offset}px`,
-        paddingLeft: `${left + offset}px`
+        paddingTop: `${top + bar}px`,
+        paddingRight: `${right}px`,
+        paddingBottom: `${footer + insetFooter + bottom}px`,
+        paddingLeft: `${left}px`
       }
     }
   },
