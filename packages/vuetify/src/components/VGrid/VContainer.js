@@ -1,4 +1,4 @@
-import './VGrid.sass'
+import './VContainer.sass'
 
 import Grid from './grid'
 

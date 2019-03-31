@@ -1,4 +1,4 @@
-import './VGrid.sass'
+import './VLayout.sass'
 
 import Grid from './grid'
 

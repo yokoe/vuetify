@@ -1,4 +1,4 @@
-import './VGrid.sass'
+import './VFlex.sass'
 
 import Grid from './grid'
 

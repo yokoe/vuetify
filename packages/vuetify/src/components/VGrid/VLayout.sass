@@ -1,0 +1,24 @@
+.layout
+  display: flex
+  flex: 1 1 auto
+  flex-wrap: wrap
+  // https://github.com/vuetifyjs/vuetify/issues/3873
+  min-width: 0
+
+  &.row
+    flex-direction: row
+
+    &.reverse
+      flex-direction: row-reverse
+
+  &.column
+    flex-direction: column
+
+    &.reverse
+      flex-direction: column-reverse
+
+    > .flex
+      max-width: 100%
+
+  &.no-wrap
+    flex-wrap: nowrap
