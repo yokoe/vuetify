@@ -7,4 +7,10 @@
     margin: -($gutter / 2)
 
   > .layout:not(:only-child)
-    margin: auto -($gutter / 2)
+    margin: auto #{-($gutter / 2)}
+
+    &:first-child
+      margin-top: -($gutter / 2)
+
+    &:last-child
+      margin-bottom: -($gutter / 2)
