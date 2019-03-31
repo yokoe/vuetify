@@ -4,7 +4,7 @@
     style="background: linear-gradient(to bottom, #1867c0, #5CBBF6)"
   >
     <tidelift />
-    <v-container>
+    <v-container contained>
       <v-layout
         align-center
         justify-center
