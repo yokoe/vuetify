@@ -1,23 +1,23 @@
 @import '../../styles/styles.sass'
+@import './_mixins.sass'
 
 .container
   flex: 1 1 100%
   padding: map-get($grid-gutters, 'xl')
   margin: auto
+  max-width: 100%
   width: 100%
 
   .container
     padding: 0
 
-  @each $size, $width in $container-max-widths
-    @media only screen and (min-width: $width)
-      max-width: ($width * 0.9375) // Credit to bootstrap
-
   @media #{map-get($display-breakpoints, 'sm-and-down')}
     padding: map-get($grid-gutters, 'lg')
 
-  &.fluid
-    max-width: 100%
+  &.contained
+    @each $size, $width in $container-max-widths
+      @media only screen and (min-width: $width)
+        max-width: ($width * 0.9375) // Credit to bootstrap
 
   &.fill-height
     align-items: center
@@ -28,14 +28,8 @@
       flex: 1 1 auto
 
   &.grid-list
+    +grid-list(map-get($grid-gutters, 'md'))
+
     @each $size, $gutter in $grid-gutters
       &-#{$size}
-        > .layout
-          .flex
-            padding: ($gutter / 2)
-
-        > .layout:only-child
-          margin: -($gutter / 2)
-
-        > .layout:not(:only-child)
-          margin: auto -($gutter / 2)
+        +grid-list($gutter)
