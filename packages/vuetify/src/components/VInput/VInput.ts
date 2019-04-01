@@ -14,41 +14,46 @@ import Validatable from '../../mixins/validatable'
 // Utilities
 import {
   convertToUnit,
-  kebabCase
+  kebabCase,
+  getSlot
 } from '../../util/helpers'
 import { deprecate } from '../../util/console'
-import mixins, { ExtractVue } from '../../util/mixins'
+import mixins from '../../util/mixins'
 
 // Types
-import Vue, { VNode, VNodeData } from 'vue'
-interface options extends Vue {
-  /* eslint-disable-next-line camelcase */
-  $_modelEvent: string
-}
+import { VNode, VNodeData } from 'vue'
 
-export default mixins<options &
-/* eslint-disable indent */
-  ExtractVue<[
-    typeof Colorable,
-    typeof Themeable,
-    typeof Validatable
-  ]>
-/* eslint-enable indent */
->(
+const baseMixins = mixins(
   Colorable,
   Themeable,
   Validatable
-  /* @vue/component */
-).extend({
+)
+
+interface options extends InstanceType<typeof baseMixins> {
+  /* eslint-disable-next-line camelcase */
+  $_modelEvent: string
+  $refs: {
+    input: HTMLInputElement
+    prefix: HTMLElement
+    suffix: HTMLElement
+  }
+}
+
+/* @vue/component */
+export default baseMixins.extend<options>().extend({
   name: 'v-input',
 
   props: {
     appendIcon: String,
-    /** @deprecated */
-    appendIconCb: Function,
+    appendOuterIcon: String,
     backgroundColor: {
       type: String,
       default: ''
+    },
+    clearable: Boolean,
+    clearIcon: {
+      type: String,
+      default: '$vuetify.icons.clear'
     },
     height: [Number, String],
     hideDetails: Boolean,
@@ -57,8 +62,11 @@ export default mixins<options &
     loading: Boolean,
     persistentHint: Boolean,
     prependIcon: String,
-    /** @deprecated */
-    prependIconCb: Function,
+    prependInnerIcon: String,
+    type: {
+      type: String,
+      default: 'text'
+    },
     value: { required: false }
   },
 
@@ -71,10 +79,8 @@ export default mixins<options &
   },
 
   computed: {
-    classes: () => ({}),
-    classesInput (): object {
+    classes (): object {
       return {
-        ...this.classes,
         'v-input--has-state': this.hasState,
         'v-input--hide-details': this.hideDetails,
         'v-input--is-label-active': this.isLabelActive,
@@ -85,9 +91,6 @@ export default mixins<options &
         'v-input--is-readonly': this.readonly,
         ...this.themeClasses
       }
-    },
-    directivesInput () {
-      return []
     },
     hasHint () {
       return !this.hasMessages &&
@@ -134,11 +137,46 @@ export default mixins<options &
   },
 
   methods: {
+    clearableCallback () {
+      this.internalValue = null
+      this.$nextTick(() => this.$refs.input.focus())
+    },
+    genAffix (
+      affix: 'clear-inner' | 'prepend-outer' | 'prepend-inner' | 'append-inner' | 'append-outer',
+      camelAffix?: 'prependInner' | 'appendOuter'
+    ) {
+      const [slot, location] = affix.split('-')
+      const children = []
+      const hasSlot = getSlot(this, slot)
+
+      if (hasSlot) {
+        children.push(hasSlot)
+      } else if ((this as any)[`${camelAffix || slot}Icon`]) {
+        children.push(this.genIcon(camelAffix || slot as 'prepend' | 'append'))
+      }
+
+      return this.genSlot(slot, location, children)
+    },
+    genClearIcon () {
+      if (!this.clearable) return null
+
+      const icon = !this.isDirty ? '' : 'clear'
+
+      return this.genSlot('append', 'inner', [
+        this.genIcon(
+          icon,
+          !this.$listeners['click:clear'] || this.clearableCallback
+        )
+      ])
+    },
     genContent () {
       return [
-        this.genPrependSlot(),
+        this.genAffix('prepend-outer'),
+        this.genAffix('prepend-inner', 'prependInner'),
         this.genControl(),
-        this.genAppendSlot()
+        this.genClearIcon(),
+        this.genAffix('append-inner'),
+        this.genAffix('append-outer', 'appendOuter')
       ]
     },
     genControl () {
@@ -152,22 +190,16 @@ export default mixins<options &
     genDefaultSlot () {
       return [
         this.genLabel(),
-        this.$slots.default
+        this.genInput(),
+        getSlot(this)
       ]
     },
-    // TODO: remove shouldDeprecate (2.0), used for clearIcon
     genIcon (
-      type: string,
-      cb?: (e: Event) => void,
-      shouldDeprecate = true
+      type: '' | 'clear' | 'prepend' | 'prependInner' | 'append' | 'appendOuter',
+      cb?: (e: Event) => void
     ) {
       const icon = (this as any)[`${type}Icon`]
       const eventName = `click:${kebabCase(type)}`
-      cb = cb || (this as any)[`${type}IconCb`]
-
-      if (shouldDeprecate && type && cb) {
-        deprecate(`:${type}-icon-cb`, `@${eventName}`, this)
-      }
 
       const data: VNodeData = {
         props: {
@@ -184,7 +216,6 @@ export default mixins<options &
               e.stopPropagation()
 
               this.$emit(eventName, e)
-              cb && cb(e)
             },
             // Container has mouseup event that will
             // trigger menu open if enclosed
@@ -206,15 +237,41 @@ export default mixins<options &
         )
       ])
     },
+    genInput () {
+      const listeners = Object.assign({}, this.$listeners)
+      delete listeners['change'] // Change should not be bound externally
+
+      const data = {
+        style: {},
+        domProps: {
+          value: this.lazyValue
+        },
+        attrs: {
+          'aria-label': (!this.$attrs || !this.$attrs.id) && this.label, // Label `for` will be set if we have an id
+          ...this.$attrs,
+          disabled: this.disabled,
+          readonly: this.readonly,
+          type: this.type
+        },
+        on: Object.assign(listeners, {
+          blur: this.onBlur,
+          input: this.onInput,
+          focus: this.onFocus,
+          keydown: this.onKeydown
+        }),
+        ref: 'input'
+      }
+
+      return this.$createElement('input', data)
+    },
     genInputSlot () {
       return this.$createElement('div', this.setBackgroundColor(this.backgroundColor, {
         staticClass: 'v-input__slot',
         style: { height: convertToUnit(this.height) },
-        directives: this.directivesInput,
         on: {
           click: this.onClick,
-          mousedown: this.onMouseDown,
-          mouseup: this.onMouseUp
+          mousedown: this.onMousedown,
+          mouseup: this.onMouseup
         },
         ref: 'input-slot'
       }), [this.genDefaultSlot()])
@@ -230,7 +287,7 @@ export default mixins<options &
           for: this.$attrs.id,
           light: this.light
         }
-      }, this.$slots.label || this.label)
+      }, getSlot(this, 'label') || this.label)
     },
     genMessages () {
       if (this.hideDetails) return null
@@ -264,9 +321,10 @@ export default mixins<options &
     },
     genPrependSlot () {
       const slot = []
+      const prepend = getSlot(this, 'prepend')
 
-      if (this.$slots.prepend) {
-        slot.push(this.$slots.prepend)
+      if (prepend) {
+        slot.push(prepend)
       } else if (this.prependIcon) {
         slot.push(this.genIcon('prepend'))
       }
@@ -275,27 +333,36 @@ export default mixins<options &
     },
     genAppendSlot () {
       const slot = []
+      const append = getSlot(this, 'append')
 
-      // Append icon for text field was really
-      // an appended inner icon, v-text-field
-      // will overwrite this method in order to obtain
-      // backwards compat
-      if (this.$slots.append) {
-        slot.push(this.$slots.append)
+      if (append) {
+        slot.push(append)
       } else if (this.appendIcon) {
         slot.push(this.genIcon('append'))
       }
 
       return this.genSlot('append', 'outer', slot)
     },
+    onBlur (e: Event) {
+      this.$emit('blur', e)
+    },
     onClick (e: Event) {
       this.$emit('click', e)
     },
-    onMouseDown (e: Event) {
+    onFocus (e: Event) {
+      this.$emit('focus', e)
+    },
+    onInput (e: Event) {
+      this.$emit('input', e)
+    },
+    onKeydown (e: Event) {
+      this.$emit('keydown', e)
+    },
+    onMousedown (e: Event) {
       this.hasMouseDown = true
       this.$emit('mousedown', e)
     },
-    onMouseUp (e: Event) {
+    onMouseup (e: Event) {
       this.hasMouseDown = false
       this.$emit('mouseup', e)
     }
@@ -305,7 +372,7 @@ export default mixins<options &
     return h('div', this.setTextColor(this.validationState, {
       staticClass: 'v-input',
       attrs: this.attrsInput,
-      'class': this.classesInput
+      class: this.classes
     }), this.genContent())
   }
 })
