@@ -16,38 +16,19 @@ import Loadable from '../../mixins/loadable'
 import Ripple from '../../directives/ripple'
 
 // Utilities
-import { keyCodes } from '../../util/helpers'
-import { deprecate } from '../../util/console'
-import mixins, { ExtractVue } from '../../util/mixins'
+import { getSlot, keyCodes } from '../../util/helpers'
+import mixins from '../../util/mixins'
 
-// Types
-import { VNode } from 'vue/types'
-import Vue from 'vue'
-
-interface options extends Vue {
-  $refs: {
-    input: HTMLInputElement
-    prefix: HTMLElement
-    suffix: HTMLElement
-  }
-}
+const baseMixins = mixins(
+  VInput,
+  Maskable,
+  Loadable
+)
 
 const dirtyTypes = ['color', 'file', 'time', 'date', 'datetime-local', 'week', 'month']
 
 /* @vue/component */
-export default mixins<options &
-/* eslint-disable indent */
-  ExtractVue<[
-    typeof VInput,
-    typeof Maskable,
-    typeof Loadable
-  ]>
-/* eslint-enable indent */
->(
-  VInput,
-  Maskable,
-  Loadable
-).extend({
+export default baseMixins.extend({
   name: 'v-text-field',
 
   directives: { Ripple },
@@ -55,18 +36,9 @@ export default mixins<options &
   inheritAttrs: false,
 
   props: {
-    appendOuterIcon: String,
-    /** @deprecated */
-    appendOuterIconCb: Function,
     autofocus: Boolean,
     box: Boolean,
     browserAutocomplete: String,
-    clearable: Boolean,
-    clearIcon: {
-      type: String,
-      default: '$vuetify.icons.clear'
-    },
-    clearIconCb: Function,
     color: {
       type: String,
       default: 'primary'
@@ -78,9 +50,6 @@ export default mixins<options &
     outline: Boolean,
     placeholder: String,
     prefix: String,
-    prependInnerIcon: String,
-    /** @deprecated */
-    prependInnerIconCb: Function,
     reverse: Boolean,
     singleLine: Boolean,
     solo: Boolean,
@@ -102,6 +71,7 @@ export default mixins<options &
   computed: {
     classes (): object {
       return {
+        ...VInput.options.computed.classes.call(this),
         'v-text-field': true,
         'v-text-field--full-width': this.fullWidth,
         'v-text-field--prefix': this.prefix,
@@ -118,9 +88,6 @@ export default mixins<options &
     },
     counterValue () {
       return (this.internalValue || '').toString().length
-    },
-    directivesInput () {
-      return []
     },
     internalValue: {
       get () {
@@ -224,70 +191,31 @@ export default mixins<options &
     blur () {
       this.$refs.input ? this.$refs.input.blur() : this.onBlur()
     },
-    clearableCallback () {
-      this.internalValue = null
-      this.$nextTick(() => this.$refs.input.focus())
-    },
-    genAppendSlot () {
-      const slot = []
-
-      if (this.$slots['append-outer']) {
-        slot.push(this.$slots['append-outer'] as VNode[])
-      } else if (this.appendOuterIcon) {
-        slot.push(this.genIcon('appendOuter'))
-      }
-
-      return this.genSlot('append', 'outer', slot)
-    },
-    genPrependInnerSlot () {
-      const slot = []
-
-      if (this.$slots['prepend-inner']) {
-        slot.push(this.$slots['prepend-inner'] as VNode[])
-      } else if (this.prependInnerIcon) {
-        slot.push(this.genIcon('prependInner'))
-      }
-
-      return this.genSlot('prepend', 'inner', slot)
-    },
     genIconSlot () {
       const slot = []
+      const append = getSlot(this, 'append')
 
-      if (this.$slots['append']) {
-        slot.push(this.$slots['append'] as VNode[])
+      if (append) {
+        slot.push(append)
       } else if (this.appendIcon) {
         slot.push(this.genIcon('append'))
       }
 
       return this.genSlot('append', 'inner', slot)
     },
-    genInputSlot () {
-      const input = VInput.options.methods.genInputSlot.call(this)
+    // genInputSlot () {
+    //   const input = VInput.options.methods.genInputSlot.call(this)
 
-      const prepend = this.genPrependInnerSlot()
+    //   const prepend = this.genPrependInnerSlot()
 
-      if (prepend) {
-        input.children = input.children || []
-        input.children.unshift(prepend)
-      }
+    //   if (prepend) {
+    //     input.children = input.children || []
+    //     input.children.unshift(prepend)
+    //   }
 
-      return input
-    },
-    genClearIcon () {
-      if (!this.clearable) return null
+    //   return input
+    // },
 
-      const icon = !this.isDirty ? '' : 'clear'
-
-      if (this.clearIconCb) deprecate(':clear-icon-cb', '@click:clear', this)
-
-      return this.genSlot('append', 'inner', [
-        this.genIcon(
-          icon,
-          (!this.$listeners['click:clear'] && this.clearIconCb) || this.clearableCallback,
-          false
-        )
-      ])
-    },
     genCounter () {
       if (this.counter === false || this.counter == null) return null
 
@@ -328,46 +256,31 @@ export default mixins<options &
         }
       }
 
-      return this.$createElement(VLabel, data, this.$slots.label || this.label)
+      return this.$createElement(VLabel, data, getSlot(this, 'label') || this.label)
     },
     genInput () {
-      const listeners = Object.assign({}, this.$listeners)
-      delete listeners['change'] // Change should not be bound externally
+      const render = VInput.options.methods.genInput.call(this)
 
-      const data = {
-        style: {},
-        domProps: {
-          value: this.maskText(this.lazyValue)
-        },
-        attrs: {
-          'aria-label': (!this.$attrs || !this.$attrs.id) && this.label, // Label `for` will be set if we have an id
-          maxlength: this.mask ? this.masked.length : undefined,
-          ...this.$attrs,
-          autocomplete: this.browserAutocomplete,
-          autofocus: this.autofocus,
-          disabled: this.disabled,
-          placeholder: this.placeholder,
-          readonly: this.readonly,
-          type: this.type
-        },
-        on: Object.assign(listeners, {
-          blur: this.onBlur,
-          input: this.onInput,
-          focus: this.onFocus,
-          keydown: this.onKeyDown
-        }),
-        ref: 'input'
+      const attrs = render.data!.attrs
+
+      render.data!.attrs = {
+        ...attrs,
+        autocomplete: this.browserAutocomplete,
+        maxlength: this.mask ? this.masked.length : undefined,
+        placeholder: this.placeholder
       }
 
-      return this.$createElement('input', data)
+      return render
     },
     genMessages () {
-      if (this.hideDetails) return null
+      const render = VInput.options.methods.genMessages.call(this)
+
+      if (!render) return null
 
       return this.$createElement('div', {
         staticClass: 'v-text-field__details'
       }, [
-        VInput.options.methods.genMessages.call(this),
+        render,
         this.genCounter()
       ])
     },
@@ -434,12 +347,12 @@ export default mixins<options &
         e.stopPropagation()
       }
 
-      VInput.options.methods.onMouseDown.call(this, e)
+      VInput.options.methods.onMousedown.call(this, e)
     },
     onMouseUp (e: Event) {
       if (this.hasMouseDown) this.focus()
 
-      VInput.options.methods.onMouseUp.call(this, e)
+      VInput.options.methods.onMouseup.call(this, e)
     }
   }
 })

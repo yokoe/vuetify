@@ -17,7 +17,6 @@ import {
   kebabCase,
   getSlot
 } from '../../util/helpers'
-import { deprecate } from '../../util/console'
 import mixins from '../../util/mixins'
 
 // Types
@@ -141,7 +140,7 @@ export default baseMixins.extend<options>().extend({
       this.internalValue = null
       this.$nextTick(() => this.$refs.input.focus())
     },
-    genAffix (
+    genLocation (
       affix: 'clear-inner' | 'prepend-outer' | 'prepend-inner' | 'append-inner' | 'append-outer',
       camelAffix?: 'prependInner' | 'appendOuter'
     ) {
@@ -171,12 +170,12 @@ export default baseMixins.extend<options>().extend({
     },
     genContent () {
       return [
-        this.genAffix('prepend-outer'),
-        this.genAffix('prepend-inner', 'prependInner'),
+        this.genLocation('prepend-outer'),
+        this.genLocation('prepend-inner', 'prependInner'),
         this.genControl(),
         this.genClearIcon(),
-        this.genAffix('append-inner'),
-        this.genAffix('append-outer', 'appendOuter')
+        this.genLocation('append-inner'),
+        this.genLocation('append-outer', 'appendOuter')
       ]
     },
     genControl () {
@@ -318,30 +317,6 @@ export default baseMixins.extend<options>().extend({
         staticClass: `v-input__${ref}`,
         ref
       }, slot)
-    },
-    genPrependSlot () {
-      const slot = []
-      const prepend = getSlot(this, 'prepend')
-
-      if (prepend) {
-        slot.push(prepend)
-      } else if (this.prependIcon) {
-        slot.push(this.genIcon('prepend'))
-      }
-
-      return this.genSlot('prepend', 'outer', slot)
-    },
-    genAppendSlot () {
-      const slot = []
-      const append = getSlot(this, 'append')
-
-      if (append) {
-        slot.push(append)
-      } else if (this.appendIcon) {
-        slot.push(this.genIcon('append'))
-      }
-
-      return this.genSlot('append', 'outer', slot)
     },
     onBlur (e: Event) {
       this.$emit('blur', e)
