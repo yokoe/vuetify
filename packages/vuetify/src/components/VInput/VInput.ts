@@ -98,7 +98,7 @@ export default baseMixins.extend<options>().extend({
         (this.persistentHint || this.isFocused)
     },
     hasLabel () {
-      return Boolean(this.$slots.label || this.label)
+      return Boolean(getSlot(this, 'label') || this.label)
     },
     // Proxy for `lazyValue`
     // This allows an input
