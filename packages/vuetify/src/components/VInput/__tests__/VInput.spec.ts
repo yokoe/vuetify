@@ -144,13 +144,13 @@ describe('VInput.ts', () => {
 
   it('should call the correct event for different click locations', () => {
     const onClick = jest.fn()
-    const onMouseDown = jest.fn()
-    const onMouseUp = jest.fn()
+    const onMousedown = jest.fn()
+    const onMouseup = jest.fn()
     const wrapper = mountFunction({
       methods: {
         onClick,
-        onMouseDown,
-        onMouseUp
+        onMousedown,
+        onMouseup
       }
     })
 
@@ -164,8 +164,8 @@ describe('VInput.ts', () => {
     slot.trigger('mouseup')
 
     expect(onClick).toHaveBeenCalledTimes(1)
-    expect(onMouseDown).toHaveBeenCalledTimes(1)
-    expect(onMouseUp).toHaveBeenCalledTimes(1)
+    expect(onMousedown).toHaveBeenCalledTimes(1)
+    expect(onMouseup).toHaveBeenCalledTimes(1)
   })
 
   it('should be in an error state', async () => {
