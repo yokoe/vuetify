@@ -36,10 +36,10 @@ describe('VInput.ts', () => {
     const input = jest.fn()
     wrapper.vm.$on('input', input)
 
-    expect(wrapper.vm.lazyValue).toBeUndefined()
+    expect(wrapper.vm.internalLazyValue).toBeUndefined()
     wrapper.vm.internalValue = 'foo'
     expect(input).toHaveBeenCalledWith('foo')
-    expect(wrapper.vm.lazyValue).toBe('foo')
+    expect(wrapper.vm.internalLazyValue).toBe('foo')
   })
 
   it('should generate append and prepend slots', () => {
@@ -128,18 +128,18 @@ describe('VInput.ts', () => {
     expect(inputWrapper.element.style.height).toBe('20px')
   })
 
-  it('should update lazyValue when value is updated', () => {
+  it('should update internalLazyValue when value is updated', () => {
     const wrapper = mountFunction({
       propsData: {
         value: 'foo'
       }
     })
 
-    expect(wrapper.vm.lazyValue).toBe('foo')
+    expect(wrapper.vm.internalLazyValue).toBe('foo')
 
     wrapper.setProps({ value: 'bar' })
 
-    expect(wrapper.vm.lazyValue).toBe('bar')
+    expect(wrapper.vm.internalLazyValue).toBe('bar')
   })
 
   it('should call the correct event for different click locations', () => {
@@ -231,5 +231,86 @@ describe('VInput.ts', () => {
     })
 
     expect(wrapper.html()).toMatchSnapshot()
+  })
+
+  it('should clear input value', async () => {
+    const wrapper = mountFunction({
+      propsData: {
+        clearable: true,
+        value: 'foo'
+      }
+    })
+
+    const clear = wrapper.find('.v-input__icon--clear .v-icon')
+    const input = jest.fn()
+    wrapper.vm.$on('input', input)
+
+    expect(wrapper.vm.internalValue).toBe('foo')
+
+    clear.trigger('click')
+
+    await wrapper.vm.$nextTick()
+
+    expect(input).toHaveBeenCalledWith(null)
+  })
+
+  it('should use a custom clear callback', async () => {
+    const clear = jest.fn()
+    const wrapper = mountFunction({
+      propsData: {
+        clearable: true,
+        value: 'foo'
+      },
+      listeners: {
+        'click:clear': clear
+      }
+    })
+
+    wrapper.vm.$on('click:clear', clear)
+
+    wrapper.find('.v-input__icon--clear .v-icon').trigger('click')
+
+    expect(clear).toBeCalled()
+  })
+
+  it('should not clear input if not clearable and has appended icon (with callback)', async () => {
+    const click = jest.fn()
+    const wrapper = mountFunction({
+      propsData: {
+        value: 'foo',
+        appendIcon: 'block',
+      },
+      listeners: {
+        'click:append': click
+      }
+    })
+
+    wrapper.vm.$on('click:append', click)
+
+    const icon = wrapper.find('.v-input__icon--append .v-icon')
+
+    icon.trigger('click')
+
+    await wrapper.vm.$nextTick()
+
+    expect(wrapper.vm.internalValue).toBe('foo')
+    expect(click.mock.calls).toHaveLength(2)
+  })
+
+
+  it('should not clear input if not clearable and has appended icon (without callback)', async () => {
+    const wrapper = mountFunction({
+      propsData: {
+        value: 'foo',
+        appendIcon: 'block',
+      }
+    })
+
+    const icon = wrapper.find('.v-input__icon--append .v-icon')
+    icon.trigger('click')
+
+    await wrapper.vm.$nextTick()
+
+    expect(wrapper.vm.internalValue).toBe('foo')
   })
 })

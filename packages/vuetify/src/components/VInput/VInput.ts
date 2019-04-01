@@ -8,6 +8,7 @@ import VMessages from '../VMessages'
 
 // Mixins
 import Colorable from '../../mixins/colorable'
+import Proxyable from '../../mixins/proxyable'
 import Themeable from '../../mixins/themeable'
 import Validatable from '../../mixins/validatable'
 
@@ -65,19 +66,31 @@ export default baseMixins.extend<options>().extend({
     type: {
       type: String,
       default: 'text'
-    },
-    value: { required: false }
+    }
   },
 
   data () {
     return {
       attrsInput: {},
-      lazyValue: this.value as any,
+      badInput: false,
+      internalLazyValue: this.value,
       hasMouseDown: false
     }
   },
 
   computed: {
+    __cachedClearIcon () {
+      if (!this.clearable) return null
+
+      const icon = !this.isDirty ? '' : 'clear'
+
+      return this.genSlot('append', 'inner', [
+        this.genIcon(
+          icon,
+          !this.$listeners['click:clear'] && this.clearableCallback
+        )
+      ])
+    },
     classes (): object {
       return {
         'v-input--has-state': this.hasState,
@@ -99,21 +112,24 @@ export default baseMixins.extend<options>().extend({
     hasLabel () {
       return Boolean(getSlot(this, 'label') || this.label)
     },
-    // Proxy for `lazyValue`
+    // Proxy for `internalLazyValue`
     // This allows an input
     // to function without
     // a provided model
     internalValue: {
       get () {
-        return this.lazyValue
+        return this.internalLazyValue
       },
       set (val: any) {
-        this.lazyValue = val
+        this.internalLazyValue = val
         this.$emit(this.$_modelEvent, val)
       }
     },
     isDirty () {
-      return !!this.lazyValue
+      return (
+        this.internalValue != null &&
+        this.internalValue.toString().length > 0
+      ) || this.badInput
     },
     isDisabled () {
       return Boolean(this.disabled || this.readonly)
@@ -125,7 +141,7 @@ export default baseMixins.extend<options>().extend({
 
   watch: {
     value (val) {
-      this.lazyValue = val
+      this.internalLazyValue = val
     }
   },
 
@@ -156,24 +172,12 @@ export default baseMixins.extend<options>().extend({
 
       return this.genSlot(slot, location, children)
     },
-    genClearIcon () {
-      if (!this.clearable) return null
-
-      const icon = !this.isDirty ? '' : 'clear'
-
-      return this.genSlot('append', 'inner', [
-        this.genIcon(
-          icon,
-          !this.$listeners['click:clear'] || this.clearableCallback
-        )
-      ])
-    },
     genContent () {
       return [
         this.genLocation('prepend-outer'),
         this.genLocation('prepend-inner', 'prependInner'),
         this.genControl(),
-        this.genClearIcon(),
+        this.__cachedClearIcon,
         this.genLocation('append-inner'),
         this.genLocation('append-outer', 'appendOuter')
       ]
@@ -195,7 +199,7 @@ export default baseMixins.extend<options>().extend({
     },
     genIcon (
       type: '' | 'clear' | 'prepend' | 'prependInner' | 'append' | 'appendOuter',
-      cb?: (e: Event) => void
+      cb?: false | ((e: Event) => void)
     ) {
       const icon = (this as any)[`${type}Icon`]
       const eventName = `click:${kebabCase(type)}`
@@ -215,6 +219,7 @@ export default baseMixins.extend<options>().extend({
               e.stopPropagation()
 
               this.$emit(eventName, e)
+              cb && cb(e)
             },
             // Container has mouseup event that will
             // trigger menu open if enclosed
@@ -243,7 +248,7 @@ export default baseMixins.extend<options>().extend({
       const data = {
         style: {},
         domProps: {
-          value: this.lazyValue
+          value: this.internalValue
         },
         attrs: {
           'aria-label': (!this.$attrs || !this.$attrs.id) && this.label, // Label `for` will be set if we have an id
@@ -328,6 +333,11 @@ export default baseMixins.extend<options>().extend({
       this.$emit('focus', e)
     },
     onInput (e: Event) {
+      const target = e.target as HTMLInputElement
+
+      this.internalValue = target.value
+      this.badInput = target.validity && target.validity.badInput
+
       this.$emit('input', e)
     },
     onKeydown (e: Event) {

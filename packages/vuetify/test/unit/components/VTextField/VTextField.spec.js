@@ -148,62 +148,6 @@ test('VTextField.js', ({ mount }) => {
     expect(input.getAttribute('readonly')).toBe('readonly')
   })
 
-  it('should clear input value', async () => {
-    const wrapper = mount(VTextField, {
-      propsData: {
-        clearable: true,
-        value: 'foo'
-      }
-    })
-
-    const clear = wrapper.find('.v-input__icon--clear .v-icon')[0]
-    const input = jest.fn()
-    wrapper.vm.$on('input', input)
-
-    expect(wrapper.vm.internalValue).toBe('foo')
-
-    clear.trigger('click')
-
-    await wrapper.vm.$nextTick()
-
-    expect(input).toHaveBeenCalledWith(null)
-  })
-
-  it('should not clear input if not clearable and has appended icon (with callback)', async () => {
-    const click = jest.fn()
-    const wrapper = mount(VTextField, {
-      propsData: {
-        value: 'foo',
-        appendIcon: 'block',
-      },
-      listeners: {
-        'click:append': click
-      }
-    })
-
-    wrapper.vm.$on('click:append', click)
-
-    const icon = wrapper.find('.v-input__icon--append .v-icon')[0]
-    icon.trigger('click')
-    await wrapper.vm.$nextTick()
-    expect(wrapper.vm.internalValue).toBe('foo')
-    expect(click.mock.calls).toHaveLength(1)
-  })
-
-  it('should not clear input if not clearable and has appended icon (without callback)', async () => {
-    const wrapper = mount(VTextField, {
-      propsData: {
-        value: 'foo',
-        appendIcon: 'block',
-      }
-    })
-
-    const icon = wrapper.find('.v-input__icon--append .v-icon')[0]
-    icon.trigger('click')
-    await wrapper.vm.$nextTick()
-    expect(wrapper.vm.internalValue).toBe('foo')
-  })
-
   it('should start validating on blur', async () => {
     const rule = jest.fn().mockReturnValue(true)
     const wrapper = mount(VTextField, {
@@ -293,21 +237,6 @@ test('VTextField.js', ({ mount }) => {
 
     expect(change).toBeCalledWith('fgh')
     expect(change.mock.calls).toHaveLength(1)
-  })
-
-  it('should not make prepend icon clearable', () => {
-    const wrapper = mount(VTextField, {
-      propsData: {
-        prependIcon: 'check',
-        appendIcon: 'check',
-        value: 'test',
-        clearable: true
-      }
-    })
-
-    const prepend = wrapper.find('.v-input__icon--append .v-icon')[0]
-    expect(prepend.text()).toBe('check')
-    expect(prepend.element.classList).not.toContain('input-group__icon-cb')
   })
 
   it('should not emit change event if value has not changed', async () => {
@@ -573,25 +502,6 @@ test('VTextField.js', ({ mount }) => {
     })
 
     expect(wrapper.html()).toMatchSnapshot()
-  })
-
-  it('should use a custom clear callback', async () => {
-    const clear = jest.fn()
-    const wrapper = mount(VTextField, {
-      propsData: {
-        clearable: true,
-        value: 'foo'
-      },
-      listeners: {
-        'click:clear': clear
-      }
-    })
-
-    wrapper.vm.$on('click:clear', clear)
-
-    wrapper.first('.v-input__icon--clear .v-icon').trigger('click')
-
-    expect(clear).toBeCalled()
   })
 
   it('should not generate label', () => {
