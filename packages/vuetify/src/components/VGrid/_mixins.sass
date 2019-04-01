@@ -1,12 +1,13 @@
 @mixin grid-list($gutter)
-  > .layout > .flex
-    padding: ($gutter / 2)
-
-  > .layout:only-child
-    margin: -($gutter / 2)
-
-  > .layout:not(:only-child)
+  > .layout
     margin: auto #{-($gutter / 2)}
+
+    > .flex
+      padding: ($gutter / 2)
+
+      > .container
+        height: 100%
+        padding: 0
 
     &:first-child
       margin-top: -($gutter / 2)
