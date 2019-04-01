@@ -19,7 +19,8 @@ $grid-gutters: (
   'sm': $grid-gutter / 2,
   'md': $grid-gutter,
   'lg': $grid-gutter * 2,
-  'xl': $grid-gutter * 3
+  'xl': $grid-gutter * 3,
+  'xxl': $grid-gutter * 4
 ) !default;
 
 $container-max-widths: (
@@ -58,29 +59,41 @@ $spacer-x: $spacer !default;
 $spacer-y: $spacer !default;
 
 $spacers: (
-  'zero': (
+  '0': (
     'x': 0,
     'y': 0
   ),
-  'one': (
+  '1': (
     'x': $spacer-x * 0.25,
     'y': $spacer-y * 0.25
   ),
-  'two': (
+  '2': (
     'x': $spacer-x * 0.5,
     'y': $spacer-y * 0.5
   ),
-  'three': (
+  '3': (
     'x': $spacer-x,
     'y': $spacer-y
   ),
-  'four': (
+  '4': (
     'x': $spacer-x * 1.5,
     'y': $spacer-y * 1.5
   ),
-  'five': (
+  '5': (
+    'x': $spacer-x * 2,
+    'y': $spacer-y * 2
+  ),
+  '6': (
     'x': $spacer-x * 3,
     'y': $spacer-y * 3
+  ),
+  '7': (
+    'x': $spacer-x * 4,
+    'y': $spacer-y * 4
+  ),
+  'auto': (
+    'x': auto,
+    'y': auto
   )
 ) !default;
 
