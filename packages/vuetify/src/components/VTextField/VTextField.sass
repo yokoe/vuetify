@@ -121,6 +121,15 @@
       opacity: 1
       transform: scale(1, 1)
 
+// Full-width
+.v-text-field.v-text-field--full-width
+  .v-input__wrapper
+    background: transparent !important
+
+    &:before,
+    &:after
+      display: none
+
 // Outlined
 .v-text-field.v-text-field--outline
   transition: border $primary-transition
