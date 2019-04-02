@@ -51,6 +51,8 @@ export default baseMixins.extend({
     placeholder: String,
     prefix: String,
     reverse: Boolean,
+    rounded: Boolean,
+    shaped: Boolean,
     singleLine: Boolean,
     solo: Boolean,
     soloInverted: Boolean,
@@ -74,10 +76,13 @@ export default baseMixins.extend({
         'v-text-field': true,
         'v-text-field--classic': this.classic,
         'v-text-field--full-width': this.fullWidth,
+        'v-text-field--hide-bottom-line': this.hideBottomLine,
         'v-text-field--outline': this.outline,
         'v-text-field--placeholder': this.placeholder,
         'v-text-field--prefix': this.prefix,
         'v-text-field--reverse': this.reverse,
+        'v-text-field--rounded': this.rounded,
+        'v-text-field--shaped': this.shaped,
         'v-text-field--single-line': this.isSingle,
         'v-text-field--solo-flat': this.flat,
         'v-text-field--solo-inverted': this.soloInverted,
@@ -86,6 +91,12 @@ export default baseMixins.extend({
     },
     counterValue () {
       return (this.internalValue || '').toString().length
+    },
+    hideBottomLine () {
+      return (
+        this.isSolo ||
+        this.rounded
+      )
     },
     internalValue: {
       get () {

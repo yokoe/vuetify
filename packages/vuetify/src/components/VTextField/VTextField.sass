@@ -95,6 +95,12 @@
   .v-input__slot
     padding-top: initial
 
+.v-text-field--hide-bottom-line
+  .v-input__wrapper
+    &:before,
+    &:after
+      display: none
+
 .v-text-field.v-input--is-focused
   .v-input__wrapper
     &:after,
@@ -105,11 +111,21 @@
       opacity: 1
       transform: scale(1, 1)
 
+.v-text-field.v-text-field--rounded
+  .v-input__wrapper
+    border-radius: 28px
+
+  .v-input__wrapper,
+  .v-input__details
+    padding-left: 32px
+    padding-right: 32px
+
+.v-text-field.v-text-field--shaped
+  .v-input__wrapper
+    border-top-left-radius: 16px
+    border-top-right-radius: 16px
+
 .v-text-field.v-text-field--solo
   .v-input__wrapper
     border-radius: 4px
     +elevation(2)
-
-    &:before,
-    &:after
-      display: none
