@@ -392,8 +392,8 @@ export default baseMixins.extend<options>().extend({
           this.prefix ? this.genAffix('prefix') : null,
           selections,
           this.suffix ? this.genAffix('suffix') : null,
-          this.genClearIcon(),
-          this.genIconSlot()
+          // this.genClearIcon(),
+          // this.genIconSlot()
         ]),
         this.genMenu(),
         this.genProgress()

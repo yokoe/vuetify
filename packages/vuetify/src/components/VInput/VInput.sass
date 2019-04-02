@@ -18,9 +18,10 @@
       color: map-deep-get($material, 'text', 'disabled')
 
 .v-input
-  align-items: flex-start
+  align-items: center
   display: flex
   flex: 1 1 auto
+  flex-wrap: wrap
   font-size: 16px
   text-align: left
 
@@ -31,6 +32,7 @@
     position: absolute
 
   input
+    background: grey
     flex: 1 1 auto
     line-height: 20px
     padding: 8px 0 8px
@@ -53,30 +55,59 @@
     height: 20px
     line-height: 20px
 
+  .v-messages
+    padding: 0 16px
+    flex: 1 0 auto
+
   &__append-inner,
   &__append-outer,
   &__prepend-inner,
   &__prepend-outer
+    background: green
     display: inline-flex
-    margin-bottom: 4px
-    margin-top: 4px
     line-height: 1
 
     .v-icon
       user-select: none
 
-  &__append-outer
-    margin-left: 9px
-
+  &__prepend-inner,
   &__prepend-outer
-    margin-right: 9px
+    margin-right: 8px
 
-  &__control
+    +rtl()
+      margin-left: 8px
+      margin-right: 0
+
+  &__append-inner,
+  &__append-outer
+    margin-left: 8px
+
+    +rtl()
+      margin-left: 0
+      margin-right: 8px
+
+  &__slot
+    align-items: center
+    color: inherit
     display: flex
-    flex-direction: column
-    height: auto
-    flex-grow: 1
-    flex-wrap: wrap
+    min-height: inherit
+    position: relative
+    transition: $primary-transition
+    width: 100%
+
+  &__wrapper
+    align-items: center
+    background: red
+    display: flex
+    flex: 1 0 auto
+    min-height: 56px
+    width: 100%
+
+  &__container
+    align-items: center
+    background: lightblue
+    display: flex
+    padding: 0 16px
     width: 100% // For IE11
 
   &__icon
@@ -91,16 +122,6 @@
     &--clear
       border-radius: 50%
 
-  &__slot
-    align-items: center
-    color: inherit
-    display: flex
-    margin-bottom: 8px
-    min-height: inherit
-    position: relative
-    transition: $primary-transition
-    width: 100%
-
   &--is-disabled:not(.v-input--is-readonly)
     pointer-events: none
 
@@ -108,9 +129,6 @@
     &:before,
     &:after
       display: none
-
-  &--hide-details > .v-input__control > .v-input__slot
-    margin-bottom: 0
 
   &--has-state
     &.error--text .v-label

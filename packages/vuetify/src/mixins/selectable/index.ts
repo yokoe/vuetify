@@ -90,27 +90,18 @@ export default mixins(
       return label
     },
     genInput (type: string, attrs: object) {
-      return this.$createElement('input', {
-        attrs: Object.assign({
-          'aria-label': this.label,
-          'aria-checked': this.isActive.toString(),
-          disabled: this.isDisabled,
-          id: this.id,
-          role: type,
-          type
-        }, attrs),
-        domProps: {
-          value: this.value,
-          checked: this.isActive
-        },
-        on: {
-          blur: this.onBlur,
-          change: this.onChange,
-          focus: this.onFocus,
-          keydown: this.onKeydown
-        },
-        ref: 'input'
-      })
+      const render = VInput.options.methods.genInput.call(this)
+
+      render.data = {
+        ...(render.data || {}),
+        ...attrs
+      }
+      render.data.attrs!['aria-checked'] = this.isActive.toString()
+      render.data.attrs!.role = type
+      render.data.attrs!.type = type
+      render.data.domProps!.checked = this.isActive
+
+      return render
     },
     onBlur () {
       this.isFocused = false

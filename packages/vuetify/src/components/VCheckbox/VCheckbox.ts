@@ -3,6 +3,7 @@ import '../../styles/components/_selection-controls.sass'
 
 // Components
 import VIcon from '../VIcon'
+import VInput from '../VInput'
 
 // Mixins
 import Selectable from '../../mixins/selectable'
@@ -58,30 +59,37 @@ export default Selectable.extend({
   },
 
   methods: {
-    genCheckbox () {
-      return this.$createElement('div', {
-        staticClass: 'v-input--selection-controls__input'
-      }, [
-        this.genInput('checkbox', {
-          ...this.$attrs,
-          'aria-checked': this.inputIndeterminate
-            ? 'mixed'
-            : this.isActive.toString()
-        }),
-        this.genRipple(this.setTextColor(this.computedColor)),
-        this.$createElement(VIcon, this.setTextColor(this.computedColor, {
-          props: {
-            dark: this.dark,
-            light: this.light
-          }
-        }), this.computedIcon)
-      ])
-    },
-    genDefaultSlot () {
-      return [
-        this.genCheckbox(),
-        this.genLabel()
+    genInputSlot () {
+      const render = VInput.options.methods.genInputSlot.call(this)
+      const ripple = this.genRipple(this.setTextColor(this.computedColor))
+      const icon = this.$createElement(VIcon, this.setTextColor(this.computedColor, {
+        props: {
+          dark: this.dark,
+          light: this.light
+        }
+      }), this.computedIcon)
+      const children = render.children!
+      const input = children.splice(1, 1)
+
+      render.children! = [
+        icon,
+        ...input,
+        ...children,
+        ripple
       ]
+
+      return render
+    },
+    genInput () {
+      const render = Selectable.options.methods.genInput.call(
+        this,
+        'checkbox',
+        {}
+      )
+
+      render.data!.attrs!['aria-checked'] = this.inputIndeterminate
+        ? 'mixed'
+        : this.isActive.toString()
     }
   }
 })

@@ -62,7 +62,6 @@ export default baseMixins.extend({
   },
 
   data: () => ({
-    badInput: false,
     initialValue: null,
     internalChange: false,
     isClearing: false
@@ -102,11 +101,6 @@ export default baseMixins.extend({
           this.$emit('input', this.lazyValue)
         }
       }
-    },
-    isDirty () {
-      return (this.lazyValue != null &&
-        this.lazyValue.toString().length > 0) ||
-        this.badInput
     },
     isEnclosed () {
       return (
@@ -191,31 +185,6 @@ export default baseMixins.extend({
     blur () {
       this.$refs.input ? this.$refs.input.blur() : this.onBlur()
     },
-    genIconSlot () {
-      const slot = []
-      const append = getSlot(this, 'append')
-
-      if (append) {
-        slot.push(append)
-      } else if (this.appendIcon) {
-        slot.push(this.genIcon('append'))
-      }
-
-      return this.genSlot('append', 'inner', slot)
-    },
-    // genInputSlot () {
-    //   const input = VInput.options.methods.genInputSlot.call(this)
-
-    //   const prepend = this.genPrependInnerSlot()
-
-    //   if (prepend) {
-    //     input.children = input.children || []
-    //     input.children.unshift(prepend)
-    //   }
-
-    //   return input
-    // },
-
     genCounter () {
       if (this.counter === false || this.counter == null) return null
 
@@ -229,14 +198,6 @@ export default baseMixins.extend({
           value: this.counterValue
         }
       })
-    },
-    genDefaultSlot () {
-      return [
-        this.genTextFieldSlot(),
-        this.genClearIcon(),
-        this.genIconSlot(),
-        this.genProgress()
-      ]
     },
     genLabel () {
       if (!this.showLabel) return null
@@ -284,19 +245,22 @@ export default baseMixins.extend({
         this.genCounter()
       ])
     },
-    genTextFieldSlot () {
-      return this.$createElement('div', {
-        staticClass: 'v-text-field__slot'
-      }, [
-        this.genLabel(),
-        this.prefix ? this.genAffix('prefix') : null,
-        this.genInput(),
-        this.suffix ? this.genAffix('suffix') : null
-      ])
+    genInputSlot () {
+      const render = VInput.options.methods.genInputSlot.call(this)
+
+      if (this.prefix) {
+        render.children!.unshift(this.genAffix('prefix'))
+      }
+
+      if (this.suffix) {
+        render.children!.push(this.genAffix('suffix'))
+      }
+
+      return render
     },
     genAffix (type: 'prefix' | 'suffix') {
       return this.$createElement('div', {
-        'class': `v-text-field__${type}`,
+        staticClass: `v-text-field__${type}`,
         ref: type
       }, this[type])
     },
@@ -327,11 +291,11 @@ export default baseMixins.extend({
       }
     },
     onInput (e: Event) {
+      VInput.options.methods.onInput.call(this, e)
+
       const target = e.target as HTMLInputElement
       this.internalChange = true
       this.mask && this.resetSelections(target)
-      this.internalValue = target.value
-      this.badInput = target.validity && target.validity.badInput
     },
     onKeyDown (e: KeyboardEvent) {
       this.internalChange = true

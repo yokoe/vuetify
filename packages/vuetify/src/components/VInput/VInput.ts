@@ -172,30 +172,20 @@ export default baseMixins.extend<options>().extend({
 
       return this.genSlot(slot, location, children)
     },
-    genContent () {
+    genContainer () {
       return [
-        this.genLocation('prepend-outer'),
-        this.genLocation('prepend-inner', 'prependInner'),
-        this.genControl(),
-        this.__cachedClearIcon,
-        this.genLocation('append-inner'),
-        this.genLocation('append-outer', 'appendOuter')
-      ]
-    },
-    genControl () {
-      return this.$createElement('div', {
-        staticClass: 'v-input__control'
-      }, [
-        this.genInputSlot(),
+        this.$createElement('div', {
+          staticClass: 'v-input__container'
+        }, [
+          this.genLocation('prepend-outer'),
+          this.genWrapper(),
+          this.genLocation('append-outer', 'appendOuter')
+        ]),
         this.genMessages()
-      ])
+      ]
     },
     genDefaultSlot () {
-      return [
-        this.genLabel(),
-        this.genInput(),
-        getSlot(this)
-      ]
+      return getSlot(this)
     },
     genIcon (
       type: '' | 'clear' | 'prepend' | 'prependInner' | 'append' | 'appendOuter',
@@ -278,7 +268,11 @@ export default baseMixins.extend<options>().extend({
           mouseup: this.onMouseup
         },
         ref: 'input-slot'
-      }), [this.genDefaultSlot()])
+      }), [
+        this.genLabel(),
+        this.genInput(),
+        this.genDefaultSlot()
+      ])
     },
     genLabel () {
       if (!this.hasLabel) return null
@@ -308,6 +302,16 @@ export default baseMixins.extend<options>().extend({
           value: (this.hasMessages || this.hasHint) ? messages : []
         }
       })
+    },
+    genWrapper () {
+      return this.$createElement('div', {
+        staticClass: 'v-input__wrapper'
+      }, [
+        this.genLocation('prepend-inner', 'prependInner'),
+        this.genInputSlot(),
+        this.__cachedClearIcon,
+        this.genLocation('append-inner')
+      ])
     },
     genSlot (
       type: string,
@@ -358,6 +362,6 @@ export default baseMixins.extend<options>().extend({
       staticClass: 'v-input',
       attrs: this.attrsInput,
       class: this.classes
-    }), this.genContent())
+    }), this.genContainer())
   }
 })
