@@ -16,6 +16,7 @@ import Loadable from '../../mixins/loadable'
 import Ripple from '../../directives/ripple'
 
 // Utilities
+import { deprecate } from '../../util/console'
 import { getSlot, keyCodes } from '../../util/helpers'
 import mixins from '../../util/mixins'
 
@@ -48,6 +49,7 @@ export default baseMixins.extend({
     fullWidth: Boolean,
     label: String,
     outline: Boolean,
+    outlined: Boolean,
     placeholder: String,
     prefix: String,
     reverse: Boolean,
@@ -77,7 +79,7 @@ export default baseMixins.extend({
         'v-text-field--classic': this.classic,
         'v-text-field--full-width': this.fullWidth,
         'v-text-field--hide-bottom-line': this.hideBottomLine,
-        'v-text-field--outline': this.outline,
+        'v-text-field--outline': this.hasOutline,
         'v-text-field--placeholder': this.placeholder,
         'v-text-field--prefix': this.prefix,
         'v-text-field--reverse': this.reverse,
@@ -92,9 +94,16 @@ export default baseMixins.extend({
     counterValue () {
       return (this.internalValue || '').toString().length
     },
+    hasOutline () {
+      return (
+        this.outline ||
+        this.outlined
+      )
+    },
     hideBottomLine () {
       return (
         this.isSolo ||
+        this.hasOutline ||
         this.rounded
       )
     },
@@ -171,6 +180,12 @@ export default baseMixins.extend({
           this.$emit('input', this.internalLazyValue)
         })
       } else this.internalLazyValue = val
+    }
+  },
+
+  created () {
+    if (this.outline) {
+      deprecate('outline', 'outlined', this)
     }
   },
 
