@@ -31,7 +31,6 @@
     position: absolute
 
   input
-    background: lightgrey
     flex: 1 1 auto
     line-height: 20px
     padding: 8px 0 8px
@@ -61,7 +60,6 @@
   &__append-outer,
   &__prepend-inner,
   &__prepend-outer
-    background: green
     display: inline-flex
     line-height: 1
 
@@ -89,11 +87,16 @@
     .v-input__append-outer
       margin-bottom: 16px
 
+  &__details,
+  &__wrapper
+    padding: 0 16px
+
   &__details
     display: flex
     flex: 1 0 auto
     max-width: 100%
     overflow: hidden
+    padding-top: 4px
 
   &__slot
     align-items: center
@@ -111,16 +114,14 @@
 
   &__wrapper
     align-items: center
-    background: red
     display: flex
     flex: 1 0 100%
     min-height: 56px
+    position: relative
 
   &__container
     align-items: center
-    background: lightblue
     display: flex
-    padding: 0 16px
     width: 100% // For IE11
 
   &__icon
