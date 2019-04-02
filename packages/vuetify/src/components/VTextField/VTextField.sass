@@ -15,6 +15,29 @@
   .v-text-field__suffix
     color: map-deep-get($material, 'text', 'secondary')
 
+  // Solo
+  &.v-text-field--solo
+    .v-input__wrapper,
+    .v-input__wrapper:hover
+      background: map-get($material, 'cards')
+
+  // Solo Inverted
+  &.v-text-field--solo-inverted
+    .v-input__wrapper,
+    .v-input__wrapper:hover
+      background: map-deep-get($material, 'inputs', 'solo-inverted')
+
+    &.v-input--is-focused
+      .v-input__wrapper
+        background: map-deep-get($material, 'inputs', 'solo-inverted-focused')
+
+      .v-label,
+      input,
+      .v-text-field__prefix,
+      .v-text-field__suffix
+        color: map-deep-get($material, 'inputs', 'solo-inverted-focused-text')
+
+
 // Block
 .v-text-field
   .v-input__wrapper
@@ -81,3 +104,12 @@
     &:after
       opacity: 1
       transform: scale(1, 1)
+
+.v-text-field.v-text-field--solo
+  .v-input__wrapper
+    border-radius: 4px
+    +elevation(2)
+
+    &:before,
+    &:after
+      display: none
