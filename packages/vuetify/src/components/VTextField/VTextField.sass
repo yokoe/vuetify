@@ -81,6 +81,12 @@
       max-width: 133%
       transform: translateY(-8px) scale(.75)
 
+// Element
+.v-text-field
+  &__prefix,
+  &__suffix
+    cursor: default
+
 // Modifier
 .v-text-field--single-line
   .v-input__slot
@@ -109,17 +115,6 @@
   //     border-width: thin 0 thin 0
   //     transform: scaleX(0)
 
-  // &__details
-  //   display: flex
-  //   flex: 1 0 auto
-  //   max-width: 100%
-  //   overflow: hidden
-
-  // &__prefix,
-  // &__suffix
-  //   align-self: center
-  //   cursor: default
-
   // &__prefix
   //   text-align: right
   //   padding-right: 4px
@@ -142,7 +137,7 @@
   //   display: flex
   //   flex: 1 1 auto
   //   position: relative
-//
+  //
   // &--box,
   // &--full-width,
   // &--outline

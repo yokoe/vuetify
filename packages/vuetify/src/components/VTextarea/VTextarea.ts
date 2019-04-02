@@ -5,26 +5,10 @@ import './VTextarea.sass'
 import VTextField from '../VTextField/VTextField'
 
 // Utilities
-import mixins, { ExtractVue } from '../../util/mixins'
-import { consoleInfo } from '../../util/console'
-
-// Types
-import Vue from 'vue'
-
-interface options extends Vue {
-  $refs: {
-    input: HTMLTextAreaElement
-  }
-}
+import mixins from '../../util/mixins'
 
 /* @vue/component */
-export default mixins<options &
-/* eslint-disable indent */
-  ExtractVue<typeof VTextField>
-/* eslint-enable indent */
->(
-  VTextField
-).extend({
+export default mixins(VTextField).extend({
   name: 'v-textarea',
 
   props: {
@@ -46,10 +30,10 @@ export default mixins<options &
   computed: {
     classes (): object {
       return {
+        ...VTextField.options.computed.classes.call(this),
         'v-textarea': true,
         'v-textarea--auto-grow': this.autoGrow,
-        'v-textarea--no-resize': this.noResizeHandle,
-        ...VTextField.options.computed.classes.call(this)
+        'v-textarea--no-resize': this.noResizeHandle
       }
     },
     noResizeHandle (): boolean {
@@ -58,7 +42,7 @@ export default mixins<options &
   },
 
   watch: {
-    lazyValue () {
+    internalValue () {
       !this.internalChange && this.autoGrow && this.$nextTick(this.calculateInputHeight)
     }
   },
@@ -67,11 +51,6 @@ export default mixins<options &
     setTimeout(() => {
       this.autoGrow && this.calculateInputHeight()
     }, 0)
-
-    // TODO: remove (2.0)
-    if (this.autoGrow && this.noResize) {
-      consoleInfo('"no-resize" is now implied when using "auto-grow", and can be removed', this)
-    }
   },
 
   methods: {

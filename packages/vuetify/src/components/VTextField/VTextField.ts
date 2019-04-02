@@ -37,8 +37,8 @@ export default baseMixins.extend({
 
   props: {
     autofocus: Boolean,
-    box: Boolean,
     browserAutocomplete: String,
+    classic: Boolean,
     color: {
       type: String,
       default: 'primary'
@@ -62,7 +62,7 @@ export default baseMixins.extend({
   },
 
   data: () => ({
-    initialValue: null,
+    initialValue: null as unknown,
     internalChange: false,
     isClearing: false
   }),
@@ -72,17 +72,16 @@ export default baseMixins.extend({
       return {
         ...VInput.options.computed.classes.call(this),
         'v-text-field': true,
+        'v-text-field--classic': this.classic,
         'v-text-field--full-width': this.fullWidth,
-        'v-text-field--prefix': this.prefix,
-        'v-text-field--single-line': this.isSingle,
-        'v-text-field--solo': this.isSolo,
-        'v-text-field--solo-inverted': this.soloInverted,
-        'v-text-field--solo-flat': this.flat,
-        'v-text-field--box': this.box,
-        'v-text-field--enclosed': this.isEnclosed,
-        'v-text-field--reverse': this.reverse,
         'v-text-field--outline': this.outline,
-        'v-text-field--placeholder': this.placeholder
+        'v-text-field--placeholder': this.placeholder,
+        'v-text-field--prefix': this.prefix,
+        'v-text-field--reverse': this.reverse,
+        'v-text-field--single-line': this.isSingle,
+        'v-text-field--solo-flat': this.flat,
+        'v-text-field--solo-inverted': this.soloInverted,
+        'v-text-field--solo': this.isSolo
       }
     },
     counterValue () {
@@ -90,25 +89,17 @@ export default baseMixins.extend({
     },
     internalValue: {
       get () {
-        return this.lazyValue
+        return this.internalLazyValue
       },
       set (val: any) {
-        if (this.mask && val !== this.lazyValue) {
-          this.lazyValue = this.unmaskText(this.maskText(this.unmaskText(val)))
+        if (this.mask && val !== this.internalLazyValue) {
+          this.internalLazyValue = this.unmaskText(this.maskText(this.unmaskText(val)))
           this.setSelectionRange()
         } else {
-          this.lazyValue = val
-          this.$emit('input', this.lazyValue)
+          this.internalLazyValue = val
+          this.$emit('input', this.internalLazyValue)
         }
       }
-    },
-    isEnclosed () {
-      return (
-        this.box ||
-        this.isSolo ||
-        this.outline ||
-        this.fullWidth
-      )
     },
     isLabelActive () {
       return this.isDirty || dirtyTypes.includes(this.type)
@@ -153,22 +144,22 @@ export default baseMixins.extend({
       this.hasColor = val
 
       if (val) {
-        this.initialValue = this.lazyValue
-      } else if (this.initialValue !== this.lazyValue) {
-        this.$emit('change', this.lazyValue)
+        this.initialValue = this.internalLazyValue
+      } else if (this.initialValue !== this.internalLazyValue) {
+        this.$emit('change', this.internalLazyValue)
       }
     },
     value (val) {
       if (this.mask && !this.internalChange) {
         const masked = this.maskText(this.unmaskText(val))
-        this.lazyValue = this.unmaskText(masked)
+        this.internalLazyValue = this.unmaskText(masked)
 
         // Emit when the externally set value was modified internally
-        String(val) !== this.lazyValue && this.$nextTick(() => {
+        String(val) !== this.internalLazyValue && this.$nextTick(() => {
           this.$refs.input.value = masked
-          this.$emit('input', this.lazyValue)
+          this.$emit('input', this.internalLazyValue)
         })
-      } else this.lazyValue = val
+      } else this.internalLazyValue = val
     }
   },
 
@@ -238,12 +229,11 @@ export default baseMixins.extend({
 
       if (!render) return null
 
-      return this.$createElement('div', {
-        staticClass: 'v-text-field__details'
-      }, [
-        render,
-        this.genCounter()
-      ])
+      const counter = this.genCounter()
+
+      if (counter) render.children!.push(counter)
+
+      return render
     },
     genInputSlot () {
       const render = VInput.options.methods.genInputSlot.call(this)

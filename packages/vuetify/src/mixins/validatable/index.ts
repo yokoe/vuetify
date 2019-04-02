@@ -57,7 +57,7 @@ export default mixins(
       hasInput: false,
       isFocused: false,
       isResetting: false,
-      lazyValue: this.value,
+      internalLazyValue: this.value,
       valid: false
     }
   },
@@ -101,10 +101,10 @@ export default mixins(
     },
     internalValue: {
       get (): unknown {
-        return this.lazyValue
+        return this.internalLazyValue
       },
       set (val: any) {
-        this.lazyValue = val
+        this.internalLazyValue = val
 
         this.$emit('input', val)
       }

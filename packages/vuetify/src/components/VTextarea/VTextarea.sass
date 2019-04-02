@@ -6,15 +6,44 @@
       textarea
         color: map-deep-get($material, 'inputs', 'solo-inverted-focused-text')
 
+// Block
 .v-textarea
   textarea
+    background: lightgrey
     flex: 1 1 auto
     line-height: 18px
+    margin-top: 4px
     max-width: 100%
     min-height: 32px
     outline: none
     padding: 7px 0 8px
     width: 100%
+
+  .v-input__append-inner,
+  .v-input__append-outer,
+  .v-input__prepend-inner,
+  .v-input__prepend-outer
+    align-self: flex-start
+    margin-top: 16px
+
+  .v-text-field__prefix,
+  .v-text-field__suffix
+    margin-top: 8px
+
+  .v-input__slot
+    align-items: flex-start
+
+  .v-label
+    top: 18px
+
+// Modifier
+.v-input.v-textarea.v-text-field--single-line
+  .v-input__slot
+    padding-top: 8px
+
+.v-textarea--no-resize
+  textarea
+    resize: none
 
   // .v-text-field__prefix
   //   padding-top: 4px
@@ -50,22 +79,9 @@
   // &.v-text-field--solo
   //   align-items: flex-start
 
-  //   // Essentially revert styles
-  //   // applied by v-text-field
-  //   .v-input__prepend-inner,
-  //   .v-input__prepend-outer,
-  //   .v-input__append-inner,
-  //   .v-input__append-outer
-  //     align-self: flex-start
-  //     margin-top: 16px
-
   // &--auto-grow
   //   textarea
   //     overflow: hidden
-
-  // &--no-resize
-  //   textarea
-  //     resize: none
 
   // &.v-text-field--enclosed
   //   .v-text-field__slot

@@ -8,7 +8,6 @@ import VMessages from '../VMessages'
 
 // Mixins
 import Colorable from '../../mixins/colorable'
-import Proxyable from '../../mixins/proxyable'
 import Themeable from '../../mixins/themeable'
 import Validatable from '../../mixins/validatable'
 
@@ -178,10 +177,9 @@ export default baseMixins.extend<options>().extend({
           staticClass: 'v-input__container'
         }, [
           this.genLocation('prepend-outer'),
-          this.genWrapper(),
+          this.genContent(),
           this.genLocation('append-outer', 'appendOuter')
-        ]),
-        this.genMessages()
+        ])
       ]
     },
     genDefaultSlot () {
@@ -294,14 +292,26 @@ export default baseMixins.extend<options>().extend({
         ? [this.hint]
         : this.validations
 
-      return this.$createElement(VMessages, {
-        props: {
-          color: this.hasHint ? '' : this.validationState,
-          dark: this.dark,
-          light: this.light,
-          value: (this.hasMessages || this.hasHint) ? messages : []
-        }
-      })
+      return this.$createElement('div', {
+        staticClass: 'v-input__details'
+      }, [
+        this.$createElement(VMessages, {
+          props: {
+            color: this.hasHint ? '' : this.validationState,
+            dark: this.dark,
+            light: this.light,
+            value: (this.hasMessages || this.hasHint) ? messages : []
+          }
+        })
+      ])
+    },
+    genContent () {
+      return this.$createElement('div', {
+        staticClass: 'v-input__content'
+      }, [
+        this.genWrapper(),
+        this.genMessages()
+      ])
     },
     genWrapper () {
       return this.$createElement('div', {
@@ -341,8 +351,6 @@ export default baseMixins.extend<options>().extend({
 
       this.internalValue = target.value
       this.badInput = target.validity && target.validity.badInput
-
-      this.$emit('input', e)
     },
     onKeydown (e: Event) {
       this.$emit('keydown', e)
