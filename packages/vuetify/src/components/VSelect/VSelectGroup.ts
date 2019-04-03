@@ -1,5 +1,6 @@
 // Components
 import VDivider from '../VDivider/VDivider'
+import VSimpleCheckbox from '../VCheckbox/VSimpleCheckbox'
 import VSubheader from '../VSubheader/VSubheader'
 import {
   VList,
@@ -42,6 +43,7 @@ export default baseMixins.extend<options>().extend({
   name: 'v-select-group',
 
   props: {
+    checkboxes: Boolean,
     hideSelected: Boolean,
     items: {
       type: Array,
@@ -64,9 +66,14 @@ export default baseMixins.extend<options>().extend({
       default: 'value'
     } as PropValidator<ItemAttribute>,
     mandatory: Boolean,
+    multiple: Boolean,
     noFilter: Boolean,
     search: String
   },
+
+  data: () => ({
+    isBooted: false
+  }),
 
   computed: {
     localeSearch (): string {
@@ -75,6 +82,15 @@ export default baseMixins.extend<options>().extend({
   },
 
   methods: {
+    genAction (item: any) {
+      return this.$createElement(VListItemAction, [
+        this.$createElement(VSimpleCheckbox, {
+          props: {
+            value: this.itemIsSelected(item)
+          }
+        })
+      ])
+    },
     genAppendItem () {
       return getSlot(this, 'append') || []
     },
@@ -122,10 +138,17 @@ export default baseMixins.extend<options>().extend({
       return items
     },
     genListItem (item: any) {
+      const children = [this.genListItemContent(item)]
+      const data = this.getListItemData(item)
+
+      if (this.checkboxes) {
+        children.unshift(this.genAction(item))
+      }
+
       return this.$createElement(
         VListItem,
-        this.getListItemData(item),
-        [this.genListItemContent(item)]
+        data,
+        children
       )
     },
     genListItemContent (item: any): VNode {
@@ -138,18 +161,27 @@ export default baseMixins.extend<options>().extend({
       )
     },
     genListItemGroup () {
+      const children = []
+
+      if (this.isBooted) children.push(this.genItems())
+
       return this.$createElement(VListItemGroup, {
         props: {
-          mandatory: this.mandatory || this.internalValue != null,
+          mandatory: !this.multiple &&
+            (this.mandatory || this.internalValue != null),
+          multiple: this.multiple,
           value: this.internalValue
         },
         on: {
           change: (val: any) => {
             this.internalValue = val
+          },
+          'hook:mounted': () => {
+            this.isBooted = true
           }
         },
         ref: 'group'
-      }, this.genItems())
+      }, children)
     },
     genPrependItem () {
       return getSlot(this, 'prepend') || []

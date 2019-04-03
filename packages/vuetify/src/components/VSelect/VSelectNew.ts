@@ -20,6 +20,7 @@ export default VTextField.extend({
   name: 'v-select-new',
 
   props: {
+    checkboxes: Boolean,
     items: {
       type: Array,
       default: () => ([])
@@ -77,8 +78,8 @@ export default VTextField.extend({
     genListItemGroup () {
       return this.$createElement(VSelectGroup, {
         props: {
+          checkboxes: this.checkboxes,
           items: this.groupItems,
-          mandatory: this.mandatory,
           multiple: this.multiple
         },
         on: {
@@ -91,6 +92,7 @@ export default VTextField.extend({
     genMenu () {
       const props = this.__cachedMenuProps
       props.activator = this.$refs.wrapper
+      props.closeOnContentClick = !this.multiple
 
       // Attach to root el so that
       // menu covers prepend/append icons
