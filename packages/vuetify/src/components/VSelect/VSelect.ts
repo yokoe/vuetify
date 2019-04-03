@@ -363,41 +363,23 @@ export default baseMixins.extend<options>().extend({
 
       return this.$createElement('div', this.setTextColor(color, {
         staticClass: 'v-select__selection v-select__selection--comma',
-        'class': {
+        class: {
           'v-select__selection--disabled': isDisabled
         },
         key
       }), `${this.getText(item)}${last ? '' : ', '}`)
     },
-    genDefaultSlot (): (VNode | VNode[] | null)[] {
-      const selections = this.genSelections()
-      const input = this.genInput()
+    genInputSlot () {
+      const render = VTextField.options.methods.genInputSlot.call(this)
 
-      // If the return is an empty array
-      // push the input
-      if (Array.isArray(selections)) {
-        selections.push(input)
-      // Otherwise push it into children
-      } else {
-        selections.children = selections.children || []
-        selections.children.push(input)
+      render.children!.unshift(this.genSelections())
+      render.children!.push(this.genMenu())
+
+      if (this.directives) {
+        render.data!.directives! = (this.directives as VNodeDirective[]).slice()
       }
 
-      return [
-        this.$createElement('div', {
-          staticClass: 'v-select__slot',
-          directives: this.directives as VNodeDirective[]
-        }, [
-          this.genLabel(),
-          this.prefix ? this.genAffix('prefix') : null,
-          selections,
-          this.suffix ? this.genAffix('suffix') : null
-          // this.genClearIcon(),
-          // this.genIconSlot()
-        ]),
-        this.genMenu(),
-        this.genProgress()
-      ]
+      return render
     },
     genInput (): VNode {
       const input = VTextField.options.methods.genInput.call(this)
@@ -432,52 +414,7 @@ export default baseMixins.extend<options>().extend({
     },
     genMenu (): VNode {
       const props = this.$_menuProps
-      props.activator = this.$refs['input-slot']
-
-      // Deprecate using menu props directly
-      // TODO: remove (2.0)
-      const inheritedProps = Object.keys(VMenu.options.props)
-
-      const deprecatedProps = Object.keys(this.$attrs).reduce<string[]>((acc, attr) => {
-        if (inheritedProps.includes(camelize(attr))) acc.push(attr)
-        return acc
-      }, [])
-
-      for (const prop of deprecatedProps) {
-        props[camelize(prop)] = this.$attrs[prop]
-      }
-
-      if (process.env.NODE_ENV !== 'production') {
-        if (deprecatedProps.length) {
-          const multiple = deprecatedProps.length > 1
-          let replacement = deprecatedProps.reduce<any>((acc, p) => {
-            acc[camelize(p)] = this.$attrs[p]
-            return acc
-          }, {})
-          const props = deprecatedProps.map((p: any) => `'${p}'`).join(', ')
-          const separator = multiple ? '\n' : '\''
-
-          const onlyBools = Object.keys(replacement).every(prop => {
-            const propType = (VMenu.options.props as { [key: string]: any })[prop]
-            const value = replacement[prop]
-            return value === true || ((propType.type || propType) === Boolean && value === '')
-          })
-
-          if (onlyBools) {
-            replacement = Object.keys(replacement).join(', ')
-          } else {
-            replacement = JSON.stringify(replacement, null, multiple ? 2 : 0)
-              .replace(/"([^(")"]+)":/g, '$1:')
-              .replace(/"/g, '\'')
-          }
-
-          consoleWarn(
-            `${props} ${multiple ? 'are' : 'is'} deprecated, use ` +
-            `${separator}${onlyBools ? '' : ':'}menu-props="${replacement}"${separator} instead`,
-            this
-          )
-        }
-      }
+      props.activator = this.$refs.wrapper
 
       // Attach to root el so that
       // menu covers prepend/append icons
