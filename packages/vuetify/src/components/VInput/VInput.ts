@@ -315,7 +315,8 @@ export default baseMixins.extend<options>().extend({
     },
     genWrapper () {
       return this.$createElement('div', {
-        staticClass: 'v-input__wrapper'
+        staticClass: 'v-input__wrapper',
+        ref: 'wrapper'
       }, [
         this.genLocation('prepend-inner', 'prependInner'),
         this.genInputSlot(),
