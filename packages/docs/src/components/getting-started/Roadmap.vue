@@ -9,9 +9,9 @@
         v-if="typeof item === 'number'"
         :key="`divider-${i}`"
       >
-        <span slot="opposite">
-          Completed
-        </span>
+        <template v-slot:opposite>
+          <span>Completed</span>
+        </template>
       </v-timeline-item>
       <v-timeline-item
         v-else-if="index == null || index >= i"
@@ -21,11 +21,12 @@
         :small="item.complete || item.small"
         fill-dot
       >
-        <strong
-          slot="opposite"
-          :class="index === i ? 'primary--text' : undefined"
-          v-text="item.caption"
-        />
+        <template v-slot:opposite>
+          <strong
+            :class="index === i ? 'primary--text' : undefined"
+            v-text="item.caption"
+          />
+        </template>
         <v-card
           :class="`elevation-${item.value ? 8 : 1}`"
           :hover="!item.complete"
@@ -33,9 +34,9 @@
           @click.native="item.value = !item.value"
         >
           <v-card-title class="py-0 pr-2">
-            <span
+            <doc-markdown
               class="body-2"
-              v-text="item.title"
+              :code="item.title"
             />
             <v-spacer />
             <v-btn
@@ -105,8 +106,8 @@
   }
 </script>
 
-<style lang="stylus">
-  #roadmap .v-timeline-item__body
-    p
-      margin: 0
+<style lang="sass">
+#roadmap .v-timeline-item__body
+  p
+    margin: 0
 </style>

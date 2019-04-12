@@ -1,8 +1,10 @@
-import '../../stylus/components/_time-picker-clock.styl'
+import './VTimePickerClock.sass'
 
 // Mixins
 import Colorable from '../../mixins/colorable'
 import Themeable from '../../mixins/themeable'
+
+// Types
 import mixins, { ExtractVue } from '../../util/mixins'
 import Vue, { VNode } from 'vue'
 
@@ -34,6 +36,7 @@ export default mixins<options &
 
   props: {
     allowedValues: Function,
+    ampm: Boolean,
     disabled: Boolean,
     double: Boolean,
     format: {
@@ -192,8 +195,10 @@ export default mixins<options &
       const coords = { x: clientX - left, y: top - clientY }
       const handAngle = Math.round(this.angle(center, coords) - this.rotate + 360) % 360
       const insideClick = this.double && this.euclidean(center, coords) < (innerWidth + innerWidth * this.innerRadiusScale) / 4
-      const value = Math.round(handAngle / this.degreesPerUnit) +
-        this.min + (insideClick ? this.roundCount : 0)
+      const value = (
+        Math.round(handAngle / this.degreesPerUnit) +
+        (insideClick ? this.roundCount : 0)
+      ) % this.count + this.min
 
       // Necessary to fix edge case when selecting left part of the value(s) at 12 o'clock
       let newValue: number

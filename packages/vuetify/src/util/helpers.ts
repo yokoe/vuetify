@@ -1,6 +1,6 @@
 import Vue from 'vue'
-import { VNode, VNodeDirective, FunctionalComponentOptions, VNodeChildrenArrayContents } from 'vue/types'
-import { VuetifyIcon } from 'vuetify'
+import { VNode, VNodeDirective, FunctionalComponentOptions } from 'vue/types'
+import { VuetifyIcon } from 'vuetify/types/services/icons'
 
 export function createSimpleFunctional (
   c: string,
@@ -102,7 +102,7 @@ export function createSimpleTransition (
 
 export function createJavaScriptTransition (
   name: string,
-  functions: Record<string, () => any>,
+  functions: Record<string, any>,
   mode = 'in-out'
 ): FunctionalComponentOptions {
   return {
@@ -148,6 +148,30 @@ export function addOnceEventListener (el: EventTarget, event: string, cb: () => 
   }
 
   el.addEventListener(event, once, false)
+}
+
+let passiveSupported = false
+try {
+  if (typeof window !== 'undefined') {
+    const testListenerOpts = Object.defineProperty({}, 'passive', {
+      get: () => {
+        passiveSupported = true
+      }
+    })
+
+    window.addEventListener('testListener', testListenerOpts, testListenerOpts)
+    window.removeEventListener('testListener', testListenerOpts, testListenerOpts)
+  }
+} catch (e) { console.warn(e) }
+export { passiveSupported }
+
+export function addPassiveEventListener (
+  el: EventTarget,
+  event: string,
+  cb: EventHandlerNonNull | (() => void),
+  options: {}
+): void {
+  el.addEventListener(event, cb, passiveSupported ? options : false)
 }
 
 export function getNestedValue (obj: any, path: (string | number)[], fallback?: any): any {
@@ -254,13 +278,6 @@ export function filterObjectOnKeys<T, K extends keyof T> (obj: T, keys: K[]): { 
   return filtered
 }
 
-export function filterChildren (array: VNode[] = [], tag: string): VNode[] {
-  return array.filter(child => {
-    return child.componentOptions &&
-      child.componentOptions.Ctor.options.name === tag
-  })
-}
-
 export function convertToUnit (str: string | number | null | undefined, unit = 'px'): string | undefined {
   if (str == null || str === '') {
     return undefined
@@ -355,18 +372,6 @@ export function groupByProperty (xs: any[], key: string): Record<string, any[]> 
 
 export function wrapInArray<T> (v: T | T[]): T[] { return Array.isArray(v) ? v : [v] }
 
-export function computeSlots (cmp: Vue, name: string, props: object) {
-  const slots: VNodeChildrenArrayContents = []
-
-  if (cmp.$slots[name]) slots.push(...cmp.$slots[name]!)
-  if (cmp.$scopedSlots[name]) {
-    const scoped = cmp.$scopedSlots[name]!(props)
-    Array.isArray(scoped) ? slots.push(...scoped) : slots.push(scoped)
-  }
-
-  return slots
-}
-
 export type compareFn<T = any> = (a: T, b: T) => number
 
 export function sortItems (
@@ -442,4 +447,28 @@ export function getSlotType<T extends boolean = false> (vm: Vue, name: string, s
   }
   if (vm.$slots[name]) return 'normal'
   if (vm.$scopedSlots[name]) return 'scoped'
+}
+
+export function debounce (fn: Function, delay: number) {
+  let timeoutId = 0 as any
+  return (...args: any[]) => {
+    clearTimeout(timeoutId)
+    timeoutId = setTimeout(() => fn(...args), delay)
+  }
+}
+
+export function getPrefixedScopedSlots (prefix: string, scopedSlots: any) {
+  return Object.keys(scopedSlots).filter(k => k.startsWith(prefix)).reduce((obj: any, k: string) => {
+    obj[k.replace(prefix, '')] = scopedSlots[k]
+    return obj
+  }, {})
+}
+
+export function getSlot (vm: Vue, name = 'default', data?: object, optional = false) {
+  if (vm.$scopedSlots[name]) {
+    return vm.$scopedSlots[name]!(data)
+  } else if (vm.$slots[name] && (!data || optional)) {
+    return vm.$slots[name]
+  }
+  return undefined
 }

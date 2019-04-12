@@ -1,7 +1,11 @@
 {
   "title": "header",
   "titleText": "headerText",
-  "mdLink": "https://material.io/design/components/bottom-navigation.html",
+  "file": "components/VBottomNavigation",
+  "mdSpec": {
+    "version": "2",
+    "link": "https://material.io/design/components/bottom-navigation.html"
+  },
   "children": [
     {
       "type": "section",
@@ -17,7 +21,7 @@
       "children": [
         {
           "type": "api",
-          "value": ["v-bottom-nav"]
+          "value": ["v-bottom-navigation"]
         }
       ]
     },

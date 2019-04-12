@@ -1,5 +1,5 @@
 // Styles
-import '../../stylus/components/_text-fields.styl'
+import './VTextField.sass'
 
 // Extensions
 import VInput from '../VInput'
@@ -127,7 +127,7 @@ export default mixins<options &
         return this.lazyValue
       },
       set (val: any) {
-        if (this.mask) {
+        if (this.mask && val !== this.lazyValue) {
           this.lazyValue = this.unmaskText(this.maskText(this.unmaskText(val)))
           this.setSelectionRange()
         } else {

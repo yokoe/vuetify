@@ -1,7 +1,7 @@
 <template>
-  <v-toolbar
+  <v-app-bar
     id="app-toolbar"
-    :class="`elevation-${isHome ? 0 : 6}`"
+    :elevate-on-scroll="isHome"
     app
     clipped-left
     clipped-right
@@ -10,7 +10,7 @@
     fixed
     height="58"
   >
-    <v-toolbar-side-icon
+    <v-app-bar-nav-icon
       v-if="!isHome"
       :aria-label="$t('Vuetify.AppToolbar.menu')"
       class="hidden-lg-and-up"
@@ -55,7 +55,7 @@
       <core-versions />
       <core-locales />
     </v-toolbar-items>
-  </v-toolbar>
+  </v-app-bar>
 </template>
 
 <script>
@@ -93,21 +93,21 @@
   }
 </script>
 
-<style lang="stylus">
-  #app-toolbar
-    .v-toolbar__title
-      margin-left .5em
-      font-weight 300
-      font-size 21px
-      position relative
-      top 1px
+<style lang="sass">
+#app-toolbar
+  .v-toolbar__title
+    margin-left: .5em
+    font-weight: 300
+    font-size: 21px
+    position: relative
+    top: 1px
 
-    .v-toolbar__items
-      .v-btn
-        text-transform capitalize
-        font-size 16px
-        font-weight 300
+  .v-toolbar__items
+    .v-btn
+      text-transform: capitalize
+      font-size: 16px
+      font-weight: 300
 
-    .v-toolbar__extension
-      padding: 0
+  .v-toolbar__extension
+    padding: 0
 </style>

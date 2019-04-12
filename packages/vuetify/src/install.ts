@@ -1,17 +1,17 @@
-// Core Features
-import * as _components from './components'
-import * as _directives from './directives'
-
-// Types
+import OurVue, { VueConstructor } from 'vue'
 import { VuetifyUseOptions } from 'types'
-import { VueConstructor } from 'vue'
+import { consoleError } from './util/console'
 
 export function install (Vue: VueConstructor, args: VuetifyUseOptions = {}) {
   if ((install as any).installed) return
   (install as any).installed = true
 
-  const directives = args.directives || _directives as any
-  const components = args.components || _components as any
+  if (OurVue !== Vue) {
+    consoleError('Multiple instances of Vue detected\nSee https://github.com/vuetifyjs/vuetify/issues/4068\n\nIf you\'re seeing "$attrs is readonly", it\'s caused by this')
+  }
+
+  const components = args.components || {}
+  const directives = args.directives || {}
 
   for (const name in directives) {
     const directive = directives[name]
@@ -30,14 +30,14 @@ export function install (Vue: VueConstructor, args: VuetifyUseOptions = {}) {
       return true
     }
     return false
-  })(args.components || components)
+  })(components)
 
   Vue.mixin({
     beforeCreate () {
       const options = this.$options as any
 
       if (options.vuetify) {
-        options.vuetify.init(options.ssrContext)
+        options.vuetify.init(this, options.ssrContext)
         this.$vuetify = Vue.observable(options.vuetify.framework)
       } else {
         this.$vuetify = (options.parent && options.parent.$vuetify) || this

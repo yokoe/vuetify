@@ -1,7 +1,11 @@
 {
   "title": "header",
   "titleText": "headerText",
-  "mdLink": "https://material.io/design/components/chips.html",
+  "file": "components/VChip",
+  "mdSpec": {
+    "version": "2",
+    "link": "https://material.io/design/components/chips.html"
+  },
   "children": [
     {
       "type": "section",

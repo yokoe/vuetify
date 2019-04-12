@@ -1,7 +1,11 @@
 {
   "title": "header",
   "titleText": "headerText",
-  "mdLink": "https://material.io/design/components/navigation-drawer.html",
+  "file": "components/VNavigationDrawer",
+  "mdSpec": {
+    "version": "2",
+    "link": "https://material.io/design/components/navigation-drawer.html"
+  },
   "children": [
     {
       "type": "section",

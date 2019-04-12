@@ -1,7 +1,11 @@
 {
   "title": "header",
   "titleText": "headerText",
-  "mdLink": "https://material.io/design/components/menus.html",
+  "file": "components/VMenu",
+  "mdSpec": {
+    "version": "2",
+    "link": "https://material.io/design/components/menus.html"
+  },
   "children": [
     {
       "type": "section",
@@ -29,6 +33,7 @@
           "value": [
             "absolute",
             "absoluteWithoutActivator",
+            "menuActivatorTooltip",
             "hover",
             "menus",
             "customTransition",

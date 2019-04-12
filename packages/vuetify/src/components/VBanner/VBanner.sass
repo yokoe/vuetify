@@ -1,13 +1,11 @@
 // Imports
 @import '../../styles/styles.sass'
 @import './_variables.scss'
-@import './_mixins.sass'
 
 // Theme
-.v-banner.theme--light
-  +banner-theme($material-light)
-.v-banner.theme--dark
-  +banner-theme($material-dark)
++theme(v-banner) using ($material)
+  .v-banner__wrapper
+    border-bottom: 1px solid map-get($material, 'dividers')
 
 // Block
 .v-banner
@@ -18,7 +16,7 @@
   align-items: center
   align-self: flex-end
   display: flex
-  flex: 1 0 0
+  flex: 1 0 auto
   justify-content: flex-end
   margin-left: 90px
   margin-bottom: -8px
@@ -46,6 +44,7 @@
 .v-banner__icon
   display: inline-flex
   margin-right: 24px
+  flex: 0 0 auto
 
   +rtl()
     margin-left: 24px

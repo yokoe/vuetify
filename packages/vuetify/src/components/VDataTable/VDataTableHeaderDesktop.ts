@@ -29,11 +29,11 @@ export default mixins(header).extend({
         [getTextAlignment(header.align, this.$vuetify.rtl)]: true
       }
 
-      if (header.value === 'dataTableSelect') {
+      if (header.value === 'data-table-select') {
         children.push(this.genSelectAll())
       } else {
         children.push(this.$scopedSlots[header.value]
-          ? this.$scopedSlots[header.value]!(header)
+          ? this.$scopedSlots[header.value]!({ header })
           : this.$createElement('span', [header.text])
         )
 
@@ -65,11 +65,11 @@ export default mixins(header).extend({
           else children.push(this.genSortIcon())
 
           if (this.options.multiSort && beingSorted) {
-            children.push(this.$createElement('span', { class: 'badge' }, [String(sortIndex + 1)]))
+            children.push(this.$createElement('span', { class: 'v-data-table-header__sort-badge' }, [String(sortIndex + 1)]))
           }
         }
 
-        if (this.dataTable.showGroupBy) {
+        if (this.showGroupBy) {
           children.push(this.genGroupByToggle(header))
         }
       }

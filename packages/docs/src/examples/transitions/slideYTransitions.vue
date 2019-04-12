@@ -1,20 +1,34 @@
 <template>
-  <div class="text-xs-center">
+  <v-layout
+    justify-center
+    wrap
+  >
     <v-menu transition="slide-y-transition">
-      <v-btn slot="activator" dark color="primary">Slide Y Transition</v-btn>
+      <template v-slot:activator="{ on }">
+        <v-btn color="primary" v-on="on">
+          Slide Y Transition
+        </v-btn>
+      </template>
       <v-list>
-        <v-list-tile v-for="n in 5" :key="n" @click="">
-          <v-list-tile-title v-text="'Item ' + n"></v-list-tile-title>
-        </v-list-tile>
+        <v-list-item v-for="n in 5" :key="n" link>
+          <v-list-item-title v-text="'Item ' + n"></v-list-item-title>
+        </v-list-item>
       </v-list>
     </v-menu>
+
+    <div class="mx-3 hidden-sm-and-down"></div>
+
     <v-menu transition="slide-y-reverse-transition">
-      <v-btn slot="activator" dark color="primary">Slide Y Reverse Transition</v-btn>
+      <template v-slot:activator="{ on }">
+        <v-btn color="secondary" v-on="on">
+          Slide Y Reverse Transition
+        </v-btn>
+      </template>
       <v-list>
-        <v-list-tile v-for="n in 5" :key="n" @click="">
-          <v-list-tile-title v-text="'Item ' + n"></v-list-tile-title>
-        </v-list-tile>
+        <v-list-item v-for="n in 5" :key="n" link>
+          <v-list-item-title v-text="'Item ' + n"></v-list-item-title>
+        </v-list-item>
       </v-list>
     </v-menu>
-  </div>
+  </v-layout>
 </template>

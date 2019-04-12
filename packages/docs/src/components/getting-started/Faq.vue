@@ -25,9 +25,9 @@
           :items="gotchas"
           :search.sync="search"
           content-class="v-data-iterator--faq"
-          hide-actions
+          hide-default-footer
         >
-          <template slot="item" slot-scope="{ item: gotcha, index }">
+          <template v-slot:item="{ item: gotcha, index }">
             <div class="mb-5">
               <core-goto :id="`question-${index + 1}`">
                 <doc-markdown :code="gotcha.q" />
@@ -88,14 +88,11 @@
   }
 </script>
 
-<style lang="stylus">
-.v-data-iterator--faq {
-  p {
-    margin: 0;
-  }
-}
+<style lang="sass">
+.v-data-iterator--faq
+  p
+    margin: 0
 
-.text-decoration-none {
-  text-decoration: none;
-}
+.text-decoration-none
+  text-decoration: none
 </style>
