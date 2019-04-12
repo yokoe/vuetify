@@ -1,9 +1,11 @@
 // Types
 import Vue from 'vue'
-import { RequestResult } from './../util/request'
+// eslint-disable-next-line import/no-duplicates
+import { RequestResult } from '../../util/request'
 
 // Utilities
-import request from '../util/request'
+// eslint-disable-next-line import/no-duplicates
+import request from '../../util/request'
 
 export default Vue.extend({
   name: 'uploadable',

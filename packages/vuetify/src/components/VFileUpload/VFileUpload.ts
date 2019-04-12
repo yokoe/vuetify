@@ -1,73 +1,113 @@
 // Styles
-import '../../stylus/components/_file-uploads.styl'
+import './VFileUpload.sass'
 
 // Components
 import VProgressLinear from '../VProgressLinear'
-import VTextField from '../VTextField/VTextField'
+import VBtn from '../VBtn/VBtn'
+import VIcon from '../VIcon/VIcon'
 
 // Mixins
-import Uploadable from '../../mixins/uploadable'
+import Uploadable from '../../mixins/uploadable/uploadable'
 
-export default {
+// Types
+import mixins from '../../util/mixins'
+import { VNode } from 'vue'
+
+export default mixins(
+  Uploadable
+).extend({
   name: 'VFileUpload',
 
-  extends: VTextField,
-
-  mixins: [Uploadable],
-
   props: {
-    appendIcon: {
+    accept: {
       type: String,
-      default: '$vuetify.icons.file'
+      default: '*'
     },
-    readonly: {
+    color: {
+      type: String,
+      default: ''
+    },
+    disabled: {
       type: Boolean,
-      default: true
+      default: false
+    },
+    isLoading: {
+      type: Boolean,
+      default: false
+    },
+    label: {
+      type: String,
+      default: ''
+    },
+    multiple: {
+      type: Boolean,
+      default: false
+    },
+    required: {
+      type: Boolean,
+      default: false
+    },
+    uploader: {
+      type: Function,
+      default: undefined
+    },
+    uploadOnSelect: {
+      type: Boolean,
+      default: false
+    },
+    validator: {
+      type: Function,
+      default: undefined
     }
   },
 
   data: () => ({
-    //
+    isUploading: false
   }),
 
   computed: {
     classes () {
       return {
-        'v-file-upload': true,
-        ...VTextField.computed.classes.call(this)
+        'v-file-upload': true
       }
     },
-    isLabelActive () {
-      return this.isDirty
-    },
-    shouldShowProgress () {
-      return this.loading || this.isUploading || this.uploadProgress > 0
+    isLabelActive () {},
+    shouldShowProgress (): Boolean {
+      return this.isLoading || this.isUploading || this.uploadProgress > 0
     }
   },
 
   methods: {
-    clearableCallback () {
-      this.internalValue = null
-      this.$refs.input.value = null
-      this.onChange()
-    },
+    clearableCallback () {},
     genFiles () {
-      return this.internalFiles.map(file =>
+      return this.internalFiles.map((file: File) =>
         this.$createElement('div', {
           staticClass: 'v-file-upload__selection'
         }, file.name)
       )
     },
+    genBtn () {
+      return this.$slots.progress || this.$createElement(VBtn, {
+        props: { icon: true },
+        on: {
+          click: this.onClick
+        }
+      }, [
+        this.$createElement(VIcon, {}, '$vuetify.icons.menu'),
+        this.genInput()
+      ])
+    },
     genInput () {
-      const input = VTextField.methods.genInput.call(this)
-
-      input.data.attrs.type = 'file'
-      input.data.on.change = this.onFileChange
-
-      return [
-        input,
-        this.genFiles()
-      ]
+      return this.$createElement('input', {
+        staticClass: 'v-file-upload__input',
+        attrs: {
+          type: 'file',
+          accept: this.accept,
+          multiple: this.multiple,
+          disabled: this.disabled
+        },
+        ref: 'fileInput'
+      })
     },
     genProgress () {
       if (!this.shouldShowProgress) return null
@@ -81,24 +121,18 @@ export default {
         }
       })
     },
-    genIconSlot () {
-      const slot = []
-
-      if (this.$slots['append']) {
-        slot.push(this.$slots['append'])
-      } else if (this.appendIcon) {
-        slot.push(this.genIcon('append', this.onClick, false))
-      }
-
-      return this.genSlot('append', 'inner', slot)
-    },
     getInput () {
-      return this.$refs.input
+      return this.$refs.fileInput
     },
-    onClick (e) {
+    onClick (e: Event) {
       this.openFiles(e)
-    },
-    onFocus () { /* */ },
-    onMouseUp () { /* */ }
+    }
+  },
+
+  render (h): VNode {
+    return h(
+      'div',
+      [this.genBtn()]
+    )
   }
-}
+})
