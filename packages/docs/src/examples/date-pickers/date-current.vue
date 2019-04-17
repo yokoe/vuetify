@@ -1,10 +1,10 @@
 <template>
   <v-layout wrap>
     <v-flex xs12 sm6 class="my-4">
-      <v-date-picker v-model="date1" :show-current="false"></v-date-picker>
+      <v-date-picker v-model="date1" hide-current-date></v-date-picker>
     </v-flex>
     <v-flex xs12 sm6 class="my-4">
-      <v-date-picker v-model="date2" show-current="2013-07-13"></v-date-picker>
+      <v-date-picker v-model="date2" current-date="2013-07-13"></v-date-picker>
     </v-flex>
   </v-layout>
 </template>
