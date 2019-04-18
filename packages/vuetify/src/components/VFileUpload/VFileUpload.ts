@@ -2,20 +2,15 @@
 import './VFileUpload.sass'
 
 // Components
-import VProgressLinear from '../VProgressLinear'
 import VBtn from '../VBtn/VBtn'
 import VIcon from '../VIcon/VIcon'
-
-// Mixins
-import Uploadable from '../../mixins/uploadable/uploadable'
+import VProgressLinear from '../VProgressLinear'
+import VSheet from '../VSheet/VSheet'
 
 // Types
-import mixins from '../../util/mixins'
-import { VNode } from 'vue'
+import { VNode, VNodeChildren } from 'vue'
 
-export default mixins(
-  Uploadable
-).extend({
+export default VSheet.extend({
   name: 'VFileUpload',
 
   props: {
@@ -23,37 +18,25 @@ export default mixins(
       type: String,
       default: '*'
     },
-    color: {
-      type: String,
-      default: ''
+    multiple: {
+      type: Boolean,
+      default: false
     },
     disabled: {
       type: Boolean,
       default: false
     },
-    isLoading: {
-      type: Boolean,
-      default: false
-    },
-    label: {
+    color: {
       type: String,
       default: ''
     },
-    multiple: {
-      type: Boolean,
-      default: false
-    },
-    required: {
+    uploadOnSelect: {
       type: Boolean,
       default: false
     },
     uploader: {
       type: Function,
       default: undefined
-    },
-    uploadOnSelect: {
-      type: Boolean,
-      default: false
     },
     validator: {
       type: Function,
@@ -62,49 +45,90 @@ export default mixins(
   },
 
   data: () => ({
-    isUploading: false
+    internalFiles: [],
+    isUploading: false,
+    isValidating: false,
+    uploadProgress: 0
   }),
 
   computed: {
-    classes () {
-      return {
+    classes (): object {
+      const classes: Record<string, boolean> = {
+        ...VSheet.options.computed.classes.call(this),
         'v-file-upload': true
       }
+      return classes
     },
-    isLabelActive () {},
     shouldShowProgress (): Boolean {
-      return this.isLoading || this.isUploading || this.uploadProgress > 0
+      return this.isValidating || this.isUploading || this.uploadProgress > 0
+    },
+    label () {
+      return 'Upload File'
     }
   },
 
   methods: {
-    clearableCallback () {},
+    openFiles (e: Event) {
+      const input = this.getInput() as any
+
+      if (e.target !== input) {
+        input.click && input.click()
+      }
+    },
+    onFileChange (e: Event) {
+      this.internalFiles = Array.from(this.getInput().files)
+    },
+    uploadFiles () {},
     genFiles () {
       return this.internalFiles.map((file: File) =>
-        this.$createElement('div', {
-          staticClass: 'v-file-upload__selection'
-        }, file.name)
+        (this.$createElement('div', {
+          staticClass: 'v-file-upload__file'
+        }, file.name))
       )
     },
-    genBtn () {
-      return this.$slots.progress || this.$createElement(VBtn, {
-        props: { icon: true },
-        on: {
-          click: this.onClick
-        }
+    genHeader () {
+      return this.$createElement('div', {
+        staticClass: 'v-file-upload__header'
       }, [
-        this.$createElement(VIcon, {}, '$vuetify.icons.menu'),
-        this.genInput()
+        this.genBtn('cloud_upload', this.onClick, true),
+        this.$createElement('span', this.label),
+        this.$createElement('div', { class: 'spacer' }),
+        this.genBtn('alarm_on', this.uploadFiles),
+        this.genBtn('close', this.onClear)
       ])
+    },
+    genFooter () {
+      return this.$createElement('div', {
+        staticClass: 'v-file-upload__footer'
+      }, [
+        this.$createElement('span', 'Uploading'),
+        this.genProgress(),
+        this.$createElement('span', '%')
+      ])
+    },
+    genBtn (icon: VNodeChildren, click: Function, input = false) {
+      const children = [this.$createElement(VIcon, {}, icon)]
+      if (input) {
+        children.push(this.genInput())
+      }
+
+      return this.$createElement(VBtn, {
+        props: { icon: true },
+        on: { click }
+      }, children)
     },
     genInput () {
       return this.$createElement('input', {
         staticClass: 'v-file-upload__input',
         attrs: {
           type: 'file',
+          title: '',
           accept: this.accept,
           multiple: this.multiple,
           disabled: this.disabled
+        },
+        on: {
+          change: this.onFileChange
         },
         ref: 'fileInput'
       })
@@ -122,17 +146,29 @@ export default mixins(
       })
     },
     getInput () {
-      return this.$refs.fileInput
+      return this.$refs.fileInput as any
     },
     onClick (e: Event) {
       this.openFiles(e)
+    },
+    onClear () {
+      this.$refs.fileInput.value = null
+      this.internalFiles = []
     }
   },
 
   render (h): VNode {
-    return h(
-      'div',
-      [this.genBtn()]
-    )
+    const children = [
+      this.genHeader(),
+      this.genFiles(),
+      this.genFooter()
+    ]
+    const data = this.setBackgroundColor(this.color, {
+      class: this.classes,
+      style: this.styles,
+      on: this.$listeners
+    })
+
+    return h('div', data, children)
   }
 })
