@@ -1,0 +1,34 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`VContent.ts should calculate paddings 1`] = `
+
+<main class="v-content"
+      style="padding: 3px 3px 15px 7px;"
+>
+  <div class="v-content__wrap">
+  </div>
+</main>
+
+`;
+
+exports[`VContent.ts should render 1`] = `
+
+<main class="v-content"
+      style="padding: 0px 0px 0px 0px;"
+>
+  <div class="v-content__wrap">
+  </div>
+</main>
+
+`;
+
+exports[`VContent.ts should render with custom tag 1`] = `
+
+<div class="v-content"
+     style="padding: 0px 0px 0px 0px;"
+>
+  <div class="v-content__wrap">
+  </div>
+</div>
+
+`;
