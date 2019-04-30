@@ -8,7 +8,7 @@ import VProgressLinear from '../VProgressLinear'
 import VSheet from '../VSheet/VSheet'
 
 // Types
-import { VNode, VNodeChildren } from 'vue'
+import { VNode, VNodeData } from 'vue'
 
 export default VSheet.extend({
   name: 'VFileUpload',
@@ -18,6 +18,10 @@ export default VSheet.extend({
       type: String,
       default: '*'
     },
+    color: {
+      type: String,
+      default: ''
+    },
     multiple: {
       type: Boolean,
       default: false
@@ -25,10 +29,6 @@ export default VSheet.extend({
     disabled: {
       type: Boolean,
       default: false
-    },
-    color: {
-      type: String,
-      default: ''
     },
     uploadOnSelect: {
       type: Boolean,
@@ -45,14 +45,16 @@ export default VSheet.extend({
   },
 
   data: () => ({
-    internalFiles: [],
+    internalFiles: [] as any[],
     isUploading: false,
     isValidating: false,
+    isUploaded: false,
+    isValid: false,
     uploadProgress: 0
   }),
 
   computed: {
-    classes (): object {
+    classes (): Object {
       const classes: Record<string, boolean> = {
         ...VSheet.options.computed.classes.call(this),
         'v-file-upload': true
@@ -62,40 +64,58 @@ export default VSheet.extend({
     shouldShowProgress (): Boolean {
       return this.isValidating || this.isUploading || this.uploadProgress > 0
     },
-    label () {
-      return 'Upload File'
+    label (): String {
+      const text = (this.internalFiles.length === 1) ? 'File' : 'Files'
+      return (this.internalFiles.length > 0) ? `${this.internalFiles.length} ${text}` : 'Upload File'
     }
   },
 
   methods: {
     openFiles (e: Event) {
-      const input = this.getInput() as any
-
+      const input = this.getInput()
       if (e.target !== input) {
         input.click && input.click()
       }
     },
     onFileChange (e: Event) {
-      this.internalFiles = Array.from(this.getInput().files)
+      const { files } = this.getInput()
+      this.isUploaded = false
+      if (files.length > 0) {
+        this.internalFiles = [...files].map(file => {
+          return Object.assign(file, {
+            isPending: true,
+            isUploading: false,
+            isValidating: false,
+            hasError: false,
+            error: ''
+          })
+        })
+      } else {
+        this.onClear()
+      }
+      if (this.uploadOnSelect) {
+        const uploaded = this.uploadFiles()
+        console.log('uploading', uploaded)
+      }
     },
     uploadFiles () {},
+    genHeader () {
+      return this.$createElement('div', {
+        staticClass: 'v-file-upload__header'
+      }, [
+        this.genInputBtn(),
+        this.$createElement('span', this.label as VNodeData),
+        this.$createElement('div', { class: 'spacer' }),
+        this.genUploadBtn(),
+        this.genClearBtn()
+      ])
+    },
     genFiles () {
       return this.internalFiles.map((file: File) =>
         (this.$createElement('div', {
           staticClass: 'v-file-upload__file'
         }, file.name))
       )
-    },
-    genHeader () {
-      return this.$createElement('div', {
-        staticClass: 'v-file-upload__header'
-      }, [
-        this.genBtn('cloud_upload', this.onClick, true),
-        this.$createElement('span', this.label),
-        this.$createElement('div', { class: 'spacer' }),
-        this.genBtn('alarm_on', this.uploadFiles),
-        this.genBtn('close', this.onClear)
-      ])
     },
     genFooter () {
       return this.$createElement('div', {
@@ -106,16 +126,34 @@ export default VSheet.extend({
         this.$createElement('span', '%')
       ])
     },
-    genBtn (icon: VNodeChildren, click: Function, input = false) {
-      const children = [this.$createElement(VIcon, {}, icon)]
-      if (input) {
-        children.push(this.genInput())
-      }
-
+    genInputBtn (): VNode {
       return this.$createElement(VBtn, {
         props: { icon: true },
-        on: { click }
-      }, children)
+        on: { click: this.onClick }
+      }, [
+        this.$createElement(VIcon, {}, 'cloud_upload'),
+        this.genInput()
+      ])
+    },
+    genUploadBtn (): VNode | null {
+      return (this.internalFiles.length > 0 && !this.uploadOnSelect)
+        ? this.$createElement(VBtn, {
+          props: { icon: true },
+          on: { click: this.uploadFiles }
+        }, [
+          this.$createElement(VIcon, {}, 'alarm_on')
+        ])
+        : null
+    },
+    genClearBtn (): VNode | null {
+      return (this.internalFiles.length > 0)
+        ? this.$createElement(VBtn, {
+          props: { icon: true },
+          on: { click: this.onClear }
+        }, [
+          this.$createElement(VIcon, {}, 'close')
+        ])
+        : null
     },
     genInput () {
       return this.$createElement('input', {
@@ -145,8 +183,8 @@ export default VSheet.extend({
         }
       })
     },
-    getInput () {
-      return this.$refs.fileInput as any
+    getInput (): any {
+      return this.$refs.fileInput
     },
     onClick (e: Event) {
       this.openFiles(e)
@@ -154,6 +192,7 @@ export default VSheet.extend({
     onClear () {
       this.$refs.fileInput.value = null
       this.internalFiles = []
+      this.isUploaded = false
     }
   },
 
