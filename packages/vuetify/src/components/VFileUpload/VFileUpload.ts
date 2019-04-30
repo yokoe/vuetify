@@ -34,11 +34,11 @@ export default VSheet.extend({
       type: Boolean,
       default: false
     },
-    uploader: {
-      type: Function,
-      default: undefined
+    fileDetails: {
+      type: Boolean,
+      default: false
     },
-    validator: {
+    uploader: {
       type: Function,
       default: undefined
     }
@@ -47,9 +47,7 @@ export default VSheet.extend({
   data: () => ({
     internalFiles: [] as any[],
     isUploading: false,
-    isValidating: false,
     isUploaded: false,
-    isValid: false,
     uploadProgress: 0
   }),
 
@@ -62,7 +60,7 @@ export default VSheet.extend({
       return classes
     },
     shouldShowProgress (): Boolean {
-      return this.isValidating || this.isUploading || this.uploadProgress > 0
+      return this.isUploading || this.uploadProgress > 0
     },
     label (): String {
       const text = (this.internalFiles.length === 1) ? 'File' : 'Files'
@@ -83,11 +81,10 @@ export default VSheet.extend({
       if (files.length > 0) {
         this.internalFiles = [...files].map(file => {
           return Object.assign(file, {
-            isPending: true,
             isUploading: false,
-            isValidating: false,
             hasError: false,
-            error: ''
+            error: '',
+            uploadProgress: 0
           })
         })
       } else {
@@ -98,7 +95,42 @@ export default VSheet.extend({
         console.log('uploading', uploaded)
       }
     },
-    uploadFiles () {},
+    updateFile (ind: number, val: Object) {
+      this.internalFiles.splice(ind, 1, Object.assign(this.internalFiles[ind], val))
+    },
+    uploadFiles () {
+      [...this.internalFiles].forEach((file, ind) => {
+        const reader = new FileReader()
+
+        reader.onload = e => {
+          console.log('load', e)
+          const data = reader.result
+          this.updateFile(ind, { isUploading: true })
+          if (this.uploader !== undefined) {
+            new Promise<boolean>(resolve => resolve(this.uploader(data)))
+              .then(uploadRes => {
+                const uploadError = (uploadRes) ? '' : 'Upload Failed'
+                this.updateFile(ind, {
+                  success: !!uploadRes,
+                  error: uploadError,
+                  isUploading: false
+                })
+              })
+          } else {
+            // default uploader logic
+          }
+        }
+
+        reader.onprogress = e => {
+          const uploadProgress = Math.ceil((e.total / e.loaded) * 100)
+          this.updateFile(ind, { uploadProgress })
+        }
+
+        // read file
+        reader.readAsDataURL(file)
+        return true
+      })
+    },
     genHeader () {
       return this.$createElement('div', {
         staticClass: 'v-file-upload__header'
@@ -111,11 +143,22 @@ export default VSheet.extend({
       ])
     },
     genFiles () {
-      return this.internalFiles.map((file: File) =>
-        (this.$createElement('div', {
+      return this.internalFiles.map((file: any) => {
+        const children = (this.fileDetails)
+          ? [file.name, file.size, file.type]
+          : [file.name]
+        children.push(
+          this.$createElement(VProgressLinear, {
+            props: {
+              active: file.isUploading,
+              value: file.uploadProgress
+            }
+          })
+        )
+        return this.$createElement('div', {
           staticClass: 'v-file-upload__file'
-        }, file.name))
-      )
+        }, children)
+      })
     },
     genFooter () {
       return this.$createElement('div', {
@@ -177,7 +220,6 @@ export default VSheet.extend({
       return this.$slots.progress || this.$createElement(VProgressLinear, {
         props: {
           active: this.isUploading,
-          color: this.color,
           height: 2,
           value: this.uploadProgress
         }
@@ -202,11 +244,11 @@ export default VSheet.extend({
       this.genFiles(),
       this.genFooter()
     ]
-    const data = this.setBackgroundColor(this.color, {
+    const data = {
       class: this.classes,
       style: this.styles,
       on: this.$listeners
-    })
+    }
 
     return h('div', data, children)
   }
