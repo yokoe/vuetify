@@ -40,10 +40,8 @@ export default VSheet.extend({
     },
     readAs: {
       type: String,
-      default: '',
       validator (val: string) {
         return [
-          '',
           'BinaryString',
           'DataURL',
           'Text'
@@ -106,36 +104,54 @@ export default VSheet.extend({
     updateFile (ind: number, val: Object) {
       this.internalFiles.splice(ind, 1, Object.assign(this.internalFiles[ind], val))
     },
+    startReader (file: File, ind: number) {
+      const reader = new FileReader()
+
+      reader.onload = e => {
+        console.log('load', e)
+        const data = reader.result
+        this.startUploader(file, ind, data)
+      }
+
+      reader.onprogress = e => {
+        const uploadProgress = Math.ceil((e.total / e.loaded) * 100)
+        this.updateFile(ind, { uploadProgress })
+      }
+
+      // reader[this.readAs](file)
+      switch (this.readAs) {
+        case 'BinaryString' :
+          reader.readAsBinaryString(file)
+          break
+        case 'DataURL' :
+          reader.readAsDataURL(file)
+          break
+        case 'Text' :
+          reader.readAsText(file)
+          break
+      }
+    },
+    startUploader (file: File, ind: number, data = undefined as any) {
+      this.updateFile(ind, { isUploading: true })
+      if (this.uploader) {
+        new Promise<boolean>(resolve => resolve(this.uploader(file, data)))
+          .then(uploadRes => {
+            const uploadError = (uploadRes) ? '' : 'Upload Failed'
+            this.updateFile(ind, {
+              success: !!uploadRes,
+              error: uploadError,
+              isUploading: false
+            })
+          })
+      }
+    },
     uploadFiles () {
       [...this.internalFiles].forEach((file, ind) => {
-        const reader = new FileReader()
-
-        reader.onload = e => {
-          console.log('load', e)
-          const data = reader.result
-          this.updateFile(ind, { isUploading: true })
-          if (this.uploader !== undefined) {
-            new Promise<boolean>(resolve => resolve(this.uploader(data)))
-              .then(uploadRes => {
-                const uploadError = (uploadRes) ? '' : 'Upload Failed'
-                this.updateFile(ind, {
-                  success: !!uploadRes,
-                  error: uploadError,
-                  isUploading: false
-                })
-              })
-          } else {
-            // default uploader logic
-          }
+        if (this.readAs) {
+          this.startReader(file, ind)
+        } else {
+          this.startUploader(file, ind)
         }
-
-        reader.onprogress = e => {
-          const uploadProgress = Math.ceil((e.total / e.loaded) * 100)
-          this.updateFile(ind, { uploadProgress })
-        }
-
-        // read file
-        reader.readAsDataURL(file)
         return true
       })
     },
