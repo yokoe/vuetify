@@ -51,10 +51,7 @@ export default VSheet.extend({
   },
 
   data: () => ({
-    internalFiles: [] as any[],
-    isUploading: false,
-    isUploaded: false,
-    uploadProgress: 0
+    internalFiles: [] as any[]
   }),
 
   computed: {
@@ -65,9 +62,13 @@ export default VSheet.extend({
       }
       return classes
     },
-    shouldShowProgress (): Boolean {
-      return this.isUploading || this.uploadProgress > 0
+    overallProgress (): number {
+      const totalProgress = this.internalFiles.reduce((progress: number, file: any) => progress + file.uploadProgress, 0)
+      return (this.internalFiles.length > 0)
+        ? Math.ceil(totalProgress / this.internalFiles.length)
+        : 0
     },
+
     label (): String {
       const text = (this.internalFiles.length === 1) ? 'File' : 'Files'
       return (this.internalFiles.length > 0) ? `${this.internalFiles.length} ${text}` : 'Upload File'
@@ -83,12 +84,10 @@ export default VSheet.extend({
     },
     onFileChange (e: Event) {
       const { files } = this.getInput()
-      this.isUploaded = false
       if (files.length > 0) {
         this.internalFiles = [...files].map(file => {
           return Object.assign(file, {
             isUploading: false,
-            hasError: false,
             error: '',
             uploadProgress: 0
           })
@@ -97,8 +96,7 @@ export default VSheet.extend({
         this.onClear()
       }
       if (this.uploadOnSelect) {
-        const uploaded = this.uploadFiles()
-        console.log('uploading', uploaded)
+        this.uploadFiles()
       }
     },
     updateFile (ind: number, val: Object) {
@@ -108,14 +106,8 @@ export default VSheet.extend({
       const reader = new FileReader()
 
       reader.onload = e => {
-        console.log('load', e)
         const data = reader.result
         this.startUploader(file, ind, data)
-      }
-
-      reader.onprogress = e => {
-        const uploadProgress = Math.ceil((e.total / e.loaded) * 100)
-        this.updateFile(ind, { uploadProgress })
       }
 
       // reader[this.readAs](file)
@@ -136,11 +128,13 @@ export default VSheet.extend({
       if (this.uploader) {
         new Promise<boolean>(resolve => resolve(this.uploader(file, data)))
           .then(uploadRes => {
-            const uploadError = (uploadRes) ? '' : 'Upload Failed'
+            const error = (uploadRes) ? '' : 'Upload Failed'
+            const uploadProgress = (uploadRes) ? 100 : 0
             this.updateFile(ind, {
               success: !!uploadRes,
-              error: uploadError,
-              isUploading: false
+              error,
+              isUploading: false,
+              uploadProgress
             })
           })
       }
@@ -171,11 +165,13 @@ export default VSheet.extend({
         const children = (this.fileDetails)
           ? [file.name, file.size, file.type]
           : [file.name]
+
         children.push(
           this.$createElement(VProgressLinear, {
             props: {
-              active: file.isUploading,
-              value: file.uploadProgress
+              color: (file.error) ? 'error' : 'primary',
+              value: file.uploadProgress,
+              indeterminate: file.isUploading
             }
           })
         )
@@ -190,7 +186,7 @@ export default VSheet.extend({
       }, [
         this.$createElement('span', 'Uploading'),
         this.genProgress(),
-        this.$createElement('span', '%')
+        this.$createElement('span', `${this.overallProgress}%`)
       ])
     },
     genInputBtn (): VNode {
@@ -239,13 +235,12 @@ export default VSheet.extend({
       })
     },
     genProgress () {
-      if (!this.shouldShowProgress) return null
+      if (!this.overallProgress) return null
 
       return this.$slots.progress || this.$createElement(VProgressLinear, {
         props: {
-          active: this.isUploading,
-          height: 2,
-          value: this.uploadProgress
+          height: 5,
+          value: this.overallProgress
         }
       })
     },
@@ -258,7 +253,6 @@ export default VSheet.extend({
     onClear () {
       this.$refs.fileInput.value = null
       this.internalFiles = []
-      this.isUploaded = false
     }
   },
 
