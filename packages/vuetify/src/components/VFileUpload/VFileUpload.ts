@@ -18,10 +18,6 @@ export default VSheet.extend({
       type: String,
       default: '*'
     },
-    color: {
-      type: String,
-      default: ''
-    },
     multiple: {
       type: Boolean,
       default: false
@@ -41,6 +37,18 @@ export default VSheet.extend({
     uploader: {
       type: Function,
       default: undefined
+    },
+    readAs: {
+      type: String,
+      default: '',
+      validator (val: string) {
+        return [
+          '',
+          'BinaryString',
+          'DataURL',
+          'Text'
+        ].includes(val)
+      }
     }
   },
 
