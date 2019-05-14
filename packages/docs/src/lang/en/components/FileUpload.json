@@ -1,0 +1,10 @@
+{
+  "header": "# File Upload",
+  "headerText": "The `v-file-upload` component is used to upload one or many files to your favorite backend systems.",
+  "examples": {
+    "usage": {
+      "desc": "The `v-file-upload` component in its basic form acts as stylish input ."
+    }
+  },
+  "props": {}
+}
