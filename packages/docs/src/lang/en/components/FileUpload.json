@@ -6,5 +6,13 @@
       "desc": "The `v-file-upload` component in its basic form acts as stylish input ."
     }
   },
-  "props": {}
+  "props": {
+    "accept": "Sets the native input `accept` attribute. Accpepts multiple file types, comma separated.",
+    "disabled": "Sets the native input `disabled` attribute.",
+    "fileDetails": "Displays file details on uploader lines.",
+    "multiple": "Sets the native input `multiple` attribute. Allows multiple files to be uploaded at once.",
+    "readAs": "Converts each file on upload using native FileReader. Accepts `BinaryString`, `DataURL`, or `Text`",
+    "uploadOnSelect": "Begins upload process immediately after selection of upload files.",
+    "uploader": "Custom function run for each file on upload."
+  }
 }

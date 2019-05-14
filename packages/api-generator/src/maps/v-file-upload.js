@@ -46,4 +46,3 @@ module.exports = {
     ]
   }
 }
-// accept, disabled, file-details, multiple, read-as, upload-on-select, uploader
