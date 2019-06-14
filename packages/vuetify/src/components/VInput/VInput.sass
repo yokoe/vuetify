@@ -106,3 +106,28 @@
   &--has-state
     &.error--text .v-label
       animation: shake .6s map-get($transition, 'swing')
+
+  &--show-focus
+    & > .v-input__control > .v-input__slot
+      &:before,
+      &:after
+        bottom: -1px // Needed for browser autocomplete styles
+        content: ''
+        left: 0
+        position: absolute
+        transition: $primary-transition
+        width: 100%
+
+      &:before
+        border-style: solid
+        border-width: thin 0 0 0
+
+      &:after
+        border-color: currentColor
+        border-style: solid
+        border-width: thin 0 thin 0
+        transform: scaleX(0)
+
+.v-input--is-focused.v-input--show-focus
+    & > .v-input__control > .v-input__slot:after
+      transform: scaleX(1)

@@ -9,7 +9,6 @@ import VMessages from '../VMessages'
 // Mixins
 import Colorable from '../../mixins/colorable'
 import Themeable from '../../mixins/themeable'
-import Validatable from '../../mixins/validatable'
 
 // Utilities
 import {
@@ -18,13 +17,13 @@ import {
 } from '../../util/helpers'
 
 // Types
-import { VNode, VNodeData, PropType } from 'vue'
+import { VNode, VNodeData } from 'vue'
 import mixins from '../../util/mixins'
+import { PropValidator } from 'vue/types/options'
 
 const baseMixins = mixins(
   Colorable,
   Themeable,
-  Validatable
 )
 
 interface options extends InstanceType<typeof baseMixins> {
@@ -50,73 +49,67 @@ export default baseMixins.extend<options>().extend({
     loading: Boolean,
     persistentHint: Boolean,
     prependIcon: String,
-    value: null as any as PropType<any>,
+    state: {
+      type: String,
+      validator: (v: string) => !v || ['success', 'error'].includes(v),
+    } as PropValidator<'success' | 'error' | null>,
+    messages: {
+      type: Array,
+      default: () => ([]),
+    } as PropValidator<string[]>,
+    disabled: Boolean,
+    readonly: Boolean,
+    dirty: Boolean,
+    showFocus: Boolean,
+    absoluteLabel: Boolean,
+    hasPlaceholder: Boolean,
   },
 
   data () {
     return {
       attrsInput: {},
-      lazyValue: this.value,
+      hasFocus: false,
       hasMouseDown: false,
     }
   },
 
   computed: {
+    hasMessages (): boolean {
+      return !!this.messages.length
+    },
     classes (): object {
       return {
-        'v-input--has-state': this.hasState,
+        'v-input--has-state': this.hasMessages,
         'v-input--hide-details': this.hideDetails,
         'v-input--is-label-active': this.isLabelActive,
-        'v-input--is-dirty': this.isDirty,
+        'v-input--is-dirty': this.dirty,
         'v-input--is-disabled': this.disabled,
-        'v-input--is-focused': this.isFocused,
+        'v-input--is-focused': this.hasFocus,
         'v-input--is-loading': this.loading !== false && this.loading !== undefined,
         'v-input--is-readonly': this.readonly,
+        'v-input--show-focus': this.showFocus,
         ...this.themeClasses,
       }
     },
     hasHint (): boolean {
       return !this.hasMessages &&
         !!this.hint &&
-        (this.persistentHint || this.isFocused)
+        (this.persistentHint || this.hasFocus)
     },
     hasLabel (): boolean {
       return !!(this.$slots.label || this.label)
-    },
-    // Proxy for `lazyValue`
-    // This allows an input
-    // to function without
-    // a provided model
-    internalValue: {
-      get (): any {
-        return this.lazyValue
-      },
-      set (val: any) {
-        this.lazyValue = val
-        this.$emit(this.$_modelEvent, val)
-      },
-    },
-    isDirty (): boolean {
-      return !!this.lazyValue
     },
     isDisabled (): boolean {
       return this.disabled || this.readonly
     },
     isLabelActive (): boolean {
-      return this.isDirty
+      return this.dirty
     },
-  },
-
-  watch: {
-    value (val) {
-      this.lazyValue = val
+    computedColor (): string | undefined {
+      if (this.state) return this.state
+      else if (this.hasFocus && this.color) return this.color
+      return undefined
     },
-  },
-
-  beforeCreate () {
-    // v-radio-group needs to emit a different event
-    // https://github.com/vuetifyjs/vuetify/issues/4752
-    this.$_modelEvent = (this.$options.model && this.$options.model.event) || 'input'
   },
 
   methods: {
@@ -150,7 +143,7 @@ export default baseMixins.extend<options>().extend({
 
       const data: VNodeData = {
         props: {
-          color: this.validationState,
+          color: this.computedColor,
           dark: this.dark,
           disabled: this.disabled,
           light: this.light,
@@ -202,9 +195,11 @@ export default baseMixins.extend<options>().extend({
 
       return this.$createElement(VLabel, {
         props: {
-          color: this.validationState,
+          absolute: this.absoluteLabel,
+          value: this.hasFocus || this.hasPlaceholder,
+          color: this.computedColor,
           dark: this.dark,
-          focused: this.hasState,
+          focused: this.hasMessages,
           for: this.id,
           light: this.light,
         },
@@ -215,11 +210,11 @@ export default baseMixins.extend<options>().extend({
 
       const messages = this.hasHint
         ? [this.hint]
-        : this.validations
+        : this.messages
 
       return this.$createElement(VMessages, {
         props: {
-          color: this.hasHint ? '' : this.validationState,
+          color: this.hasHint ? '' : this.computedColor,
           dark: this.dark,
           light: this.light,
           value: (this.hasMessages || this.hasHint) ? messages : [],
@@ -280,9 +275,21 @@ export default baseMixins.extend<options>().extend({
   },
 
   render (h): VNode {
-    return h('div', this.setTextColor(this.validationState, {
+    return h('div', this.setTextColor(this.computedColor, {
       staticClass: 'v-input',
-      attrs: this.attrsInput,
+      attrs: {
+        tabindex: 0,
+      },
+      on: {
+        focus: (e: any) => {
+          this.hasFocus = true
+          this.$emit('focus', e)
+        },
+        blur: (e: any) => {
+          this.hasFocus = false
+          this.$emit('blur', e)
+        },
+      },
       class: this.classes,
     }), this.genContent())
   },

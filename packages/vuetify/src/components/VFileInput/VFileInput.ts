@@ -1,13 +1,35 @@
-import VInput from '../VInput'
-import mixins, { ExtractVue } from '../../util/mixins'
+import './VFileInput.sass'
 
-interface options extends ExtractVue<typeof VInput> {
+import Vue, { VNode } from 'vue'
+import VInput from '../VInput'
+import mixins from '../../util/mixins'
+import { consoleError } from '../../util/console'
+import { PropValidator } from 'vue/types/options'
+
+interface options extends Vue {
   $refs: {
     input: HTMLInputElement
   }
 }
 
-export default mixins<options>(VInput).extend({
+function validate (value: any, rules: Function[]) {
+  const errors = []
+
+  for (let index = 0; index < rules.length; index++) {
+    const rule = rules[index]
+    const valid = typeof rule === 'function' ? rule(value) : rule
+
+    if (typeof valid === 'string') {
+      errors.push(valid)
+    } else if (typeof valid !== 'boolean') {
+      consoleError(`Rules should return a string or boolean, received '${typeof valid}' instead`)
+    }
+  }
+
+  return errors
+}
+
+export default mixins<options>().extend({
   name: 'v-file-input',
 
   props: {
@@ -18,70 +40,48 @@ export default mixins<options>(VInput).extend({
       type: String,
       default: '$vuetify.icons.file',
     },
-    appendIcon: {
-      type: String,
-      default: '$vuetify.icons.close',
-    },
+    rules: {
+      type: Array,
+      default: () => ([]),
+    } as PropValidator<Function[]>,
     placeholder: String,
+    color: {
+      type: String,
+      default: 'primary',
+    },
+  },
+
+  data: () => ({
+    files: [] as any as FileList,
+    errors: [] as string[],
+  }),
+
+  watch: {
+    files: {
+      handler (v) {
+        this.errors = validate(v, this.rules)
+      },
+      deep: true,
+    },
   },
 
   computed: {
-    text (): string | null {
-      if (!this.lazyValue || !this.lazyValue.length) return this.placeholder
+    hasFiles (): boolean {
+      return this.files && !!this.files.length
+    },
+    text (): string {
+      if (!this.files || !this.files.length) return this.placeholder
 
       // TODO: use $t for X selected
-      return this.lazyValue.length > 1 ? `${this.lazyValue.length} files selected` : this.lazyValue[0].name
+      return this.files.length > 1 ? `${this.files.length} files selected` : this.files[0].name
     },
   },
 
   methods: {
-    genDefaultSlot () {
-      return [
-        this.genLabel(),
-        this.genInput(),
-        this.genText(),
-      ]
-    },
-    genPrependSlot () {
-      const slot = []
-
-      if (this.$slots.prepend) {
-        slot.push(this.$slots.prepend)
-      } else if (this.prependIcon) {
-        slot.push(this.genIcon('prepend', () => {
-          this.$refs.input.click()
-        }))
-      }
-
-      return this.genSlot('prepend', 'outer', slot)
-    },
-    genAppendSlot () {
-      const slot = []
-
-      // Append icon for text field was really
-      // an appended inner icon, v-text-field
-      // will overwrite this method in order to obtain
-      // backwards compat
-      if (this.$slots.append) {
-        slot.push(this.$slots.append)
-      } else if (this.clearable && this.appendIcon) {
-        slot.push(this.genIcon('append', () => {
-          this.lazyValue = null
-          this.$refs.input.value = ''
-        }))
-      }
-
-      return this.genSlot('append', 'outer', slot)
-    },
     genInput () {
       return this.$createElement('input', {
         ref: 'input',
         attrs: {
-          'aria-label': !this.id && this.label, // Label `for` will be set if we have an id
-          ...this.$attrs,
-          disabled: this.disabled,
-          placeholder: this.placeholder,
-          readonly: this.readonly,
           id: this.id,
           hidden: true,
           type: 'file',
@@ -89,13 +89,59 @@ export default mixins<options>(VInput).extend({
         },
         on: {
           change: (e: any) => {
-            this.lazyValue = [...e.target.files]
+            this.files = e.target.files
           },
         },
       })
     },
     genText () {
-      return this.$createElement('div', [this.text])
+      return this.$createElement('div', {
+        staticClass: 'v-file-input__text',
+      }, [this.text])
     },
+    click () {
+      this.$refs.input.click()
+    },
+  },
+
+  render (h): VNode {
+    const props: Record<string, any> = {
+      ...this.$props,
+      dirty: this.$props.dirty || this.hasFiles,
+      absoluteLabel: true,
+      hasPlaceholder: !!this.placeholder,
+    }
+
+    const on: Record<string, any> = {
+      ...this.$listeners,
+      'click:prepend': this.click,
+    }
+
+    if (this.clearable) {
+      props.appendIcon = '$vuetify.icons.close'
+      on['click:append'] = () => {
+        this.files = null as any as FileList
+        this.$refs.input.value = ''
+      }
+    }
+
+    if (this.errors.length) {
+      props.state = 'error'
+      props.messages = this.errors
+    }
+
+    return h(VInput, {
+      staticClass: 'v-file-input',
+      props,
+      on,
+      nativeOn: {
+        keydown: (e: KeyboardEvent) => {
+          if (e.keyCode === 32 || e.keyCode === 13) this.click()
+        },
+      },
+    }, [
+      this.genInput(),
+      this.genText(),
+    ])
   },
 })
