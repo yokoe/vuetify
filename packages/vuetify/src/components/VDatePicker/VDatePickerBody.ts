@@ -43,7 +43,6 @@ export const VDatePickerBodyProps = {
     default: 0,
   },
   hideCurrentDate: Boolean,
-  reactive: Boolean,
   readonly: Boolean,
   scrollable: Boolean,
   showWeekNumbers: Boolean,

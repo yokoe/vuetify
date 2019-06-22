@@ -71,7 +71,6 @@ export const VDateProps = {
   min: String,
   multiple: Boolean,
   pickerDate: String,
-  reactive: Boolean,
   value: [Array, String] as PropValidator<DatePickerValue>,
   selectedItemsText: {
     type: String,
