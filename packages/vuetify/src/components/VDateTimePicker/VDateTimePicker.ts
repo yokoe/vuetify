@@ -59,12 +59,15 @@ export default Vue.extend({
   },
 
   watch: {
-    value (val: string) {
-      // TODO: Check against malformed input?
+    value: {
+      handler (val: string) {
+        // TODO: Check against malformed input?
 
-      const [date, time] = val.split(' ')
-      this.internalDate = date
-      this.internalTime = time
+        const [date, time] = val.split(' ')
+        this.internalDate = date
+        this.internalTime = time
+      },
+      immediate: true,
     },
     combinedValue (val: string | null) {
       if (val) this.$emit('input', val)
