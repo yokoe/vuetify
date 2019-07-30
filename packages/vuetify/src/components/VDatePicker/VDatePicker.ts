@@ -30,8 +30,8 @@ export default Vue.extend({
     genPickerTitle (props: VDateScopedProps) {
       return this.$createElement(VDatePickerTitle, {
         props: {
-          dateFormat: props.formatters.titleDate,
-          yearFormat: props.formatters.year,
+          dateFormat: props.titleDateFormat,
+          yearFormat: props.yearFormat,
           value: props.value,
           disabled: this.disabled,
           readonly: this.readonly,

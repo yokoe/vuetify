@@ -15,11 +15,7 @@ export type Format = 'ampm' | '24hr'
 export type Period = 'am' | 'pm'
 export type AllowFunction = (val: number) => boolean
 
-interface Allowed {
-  hours: AllowFunction | number[]
-  minutes: AllowFunction | number[]
-  seconds: AllowFunction | number[]
-}
+type Allowed = AllowFunction | number[]
 
 export interface Time {
   hour: number | null
@@ -62,9 +58,9 @@ export function parseTime (value: string | null | Date): [Time, Period] {
 
 export interface VTimeScopedProps {
   allowed: {
-    hour: Function
-    minute: Function
-    second: Function
+    hour: AllowFunction
+    minute: AllowFunction
+    second: AllowFunction
   }
   format: Format
   time: Time
@@ -80,9 +76,17 @@ export default Vue.extend({
   name: 'v-time',
 
   props: {
-    allowed: {
-      type: Object,
-      default: () => ({ hours: () => true, minutes: () => true, seconds: () => true }),
+    allowedHours: {
+      type: Function,
+      default: () => true,
+    } as PropValidator<Allowed>,
+    allowedMinutes: {
+      type: Function,
+      default: () => true,
+    } as PropValidator<Allowed>,
+    allowedSeconds: {
+      type: Function,
+      default: () => true,
     } as PropValidator<Allowed>,
     format: {
       type: String,
@@ -114,12 +118,12 @@ export default Vue.extend({
     isAllowedHourCb (): AllowFunction {
       let cb: AllowFunction
 
-      if (!this.allowed.hours) {
+      if (!this.allowedHours) {
         cb = () => true
-      } else if (this.allowed.hours instanceof Array) {
-        cb = (val: number) => (this.allowed.hours as number[]).includes(val)
+      } else if (this.allowedHours instanceof Array) {
+        cb = (val: number) => (this.allowedHours as number[]).includes(val)
       } else {
-        cb = this.allowed.hours
+        cb = this.allowedHours
       }
 
       if (!this.min && !this.max) return cb
@@ -137,12 +141,12 @@ export default Vue.extend({
       let cb: AllowFunction
 
       const isHourAllowed = !this.isAllowedHourCb || this.internalTime.hour === null || this.isAllowedHourCb(this.internalTime.hour)
-      if (!this.allowed.minutes) {
+      if (!this.allowedMinutes) {
         cb = () => true
-      } else if (this.allowed.minutes instanceof Array) {
-        cb = (val: number) => (this.allowed.minutes as number[]).includes(val)
+      } else if (this.allowedMinutes instanceof Array) {
+        cb = (val: number) => (this.allowedMinutes as number[]).includes(val)
       } else {
-        cb = this.allowed.minutes
+        cb = this.allowedMinutes
       }
 
       if (!this.min && !this.max) {
@@ -172,12 +176,12 @@ export default Vue.extend({
           this.isAllowedMinuteCb(this.internalTime.minute)
         )
 
-      if (!this.allowed.seconds) {
+      if (!this.allowedSeconds) {
         cb = () => true
-      } else if (this.allowed.seconds instanceof Array) {
-        cb = (val: number) => (this.allowed.seconds as number[]).includes(val)
+      } else if (this.allowedSeconds instanceof Array) {
+        cb = (val: number) => (this.allowedSeconds as number[]).includes(val)
       } else {
-        cb = this.allowed.seconds
+        cb = this.allowedSeconds
       }
 
       if (!this.min && !this.max) {

@@ -19,14 +19,14 @@ export type DateEventColors = DateEventColorValue | Record<string, DateEventColo
 export type DatePickerMultipleFormatter = (date: string[]) => string
 
 export interface VDateFormatters {
-  year: DatePickerFormatter
-  titleDate: DatePickerFormatter | DatePickerMultipleFormatter
-  landscapeTitleDate: DatePickerFormatter | DatePickerMultipleFormatter
-  headerDate: DatePickerFormatter
-  headerMonth: DatePickerFormatter
-  date: DatePickerFormatter
-  month: DatePickerFormatter
-  weekday: DatePickerFormatter
+  yearFormat: DatePickerFormatter
+  titleDateFormat: DatePickerFormatter | DatePickerMultipleFormatter
+  landscapeTitleDateFormat: DatePickerFormatter | DatePickerMultipleFormatter
+  headerDateFormat: DatePickerFormatter
+  headerMonthFormat: DatePickerFormatter
+  dateFormat: DatePickerFormatter
+  monthFormat: DatePickerFormatter
+  weekdayFormat: DatePickerFormatter
 }
 
 // Adds leading zero to month/day if necessary, returns 'YYYY' if type = 'year',
@@ -50,20 +50,49 @@ export interface VDateScopedProps {
   dateClick: Function
   monthClick: Function
   yearClick: Function
-  formatters: VDateFormatters
+  // formatters: VDateFormatters
   value: string[]
   activePicker: PickerType
   updateActivePicker: Function
   pickerDate: string
   updatePickerDate: Function
   multiple: boolean
+  yearFormat: DatePickerFormatter
+  titleDateFormat: DatePickerFormatter | DatePickerMultipleFormatter
+  landscapeTitleDateFormat: DatePickerFormatter | DatePickerMultipleFormatter
+  headerDateFormat: DatePickerFormatter
+  headerMonthFormat: DatePickerFormatter
+  dateFormat: DatePickerFormatter
+  monthFormat: DatePickerFormatter
+  weekdayFormat: DatePickerFormatter
 }
 
 export const VDateProps = {
-  formatters: {
-    type: Object,
-    default: () => ({}),
-  } as PropValidator<Partial<VDateFormatters>>,
+  yearFormat: {
+    type: Function,
+  } as PropValidator<DatePickerFormatter>,
+  titleDateFormat: {
+    type: Function,
+  } as PropValidator<DatePickerFormatter>,
+  headerDateFormat: {
+    type: Function,
+  } as PropValidator<DatePickerFormatter>,
+  headerMonthFormat: {
+    type: Function,
+  } as PropValidator<DatePickerFormatter>,
+  dateFormat: {
+    type: Function,
+  } as PropValidator<DatePickerFormatter>,
+  weekdayFormat: {
+    type: Function,
+  } as PropValidator<DatePickerFormatter>,
+  monthFormat: {
+    type: Function,
+  } as PropValidator<DatePickerFormatter>,
+  // formatters: {
+  //   type: Object,
+  //   default: () => ({}),
+  // } as PropValidator<Partial<VDateFormatters>>,
   activePicker: String as PropValidator<DatePickerType>,
   allowedDates: Function as PropValidator<AllowedDateFunction | undefined>,
   currentDate: String,
@@ -115,14 +144,14 @@ export default mixins(
     },
     computedFormatters (): VDateFormatters {
       return {
-        year: this.formatters.year || createNativeLocaleFormatter(this.currentLocale, { year: 'numeric', timeZone: 'UTC' }, { length: 4 }),
-        titleDate: this.formatters.titleDate || this.defaultTitleDateFormatter,
-        landscapeTitleDate: this.formatters.landscapeTitleDate || this.defaultLandscapeTitleDate,
-        weekday: this.formatters.weekday || createNativeLocaleFormatter(this.currentLocale, { weekday: 'narrow', timeZone: 'UTC' }) || (v => v),
-        date: this.formatters.date || createNativeLocaleFormatter(this.currentLocale, { day: 'numeric', timeZone: 'UTC' }, { start: 8, length: 2 }) || (v => v),
-        headerMonth: this.formatters.headerMonth || createNativeLocaleFormatter(this.currentLocale, { month: 'long', year: 'numeric', timeZone: 'UTC' }, { length: 7 }),
-        month: this.formatters.month || createNativeLocaleFormatter(this.currentLocale, { month: 'short', timeZone: 'UTC' }, { start: 5, length: 2 }),
-        headerDate: this.formatters.headerDate || createNativeLocaleFormatter(this.currentLocale, { year: 'numeric', timeZone: 'UTC' }, { length: 4 }),
+        yearFormat: this.yearFormat || createNativeLocaleFormatter(this.currentLocale, { year: 'numeric', timeZone: 'UTC' }, { length: 4 }),
+        titleDateFormat: this.titleDateFormat || this.defaultTitleDateFormatter,
+        landscapeTitleDateFormat: /* this.landscapeTitleDateFormat  || */this.defaultLandscapeTitleDate,
+        weekdayFormat: this.weekdayFormat || createNativeLocaleFormatter(this.currentLocale, { weekday: 'narrow', timeZone: 'UTC' }) || (v => v),
+        dateFormat: this.dateFormat || createNativeLocaleFormatter(this.currentLocale, { day: 'numeric', timeZone: 'UTC' }, { start: 8, length: 2 }) || (v => v),
+        headerMonthFormat: this.headerMonthFormat || createNativeLocaleFormatter(this.currentLocale, { month: 'long', year: 'numeric', timeZone: 'UTC' }, { length: 7 }),
+        monthFormat: this.monthFormat || createNativeLocaleFormatter(this.currentLocale, { month: 'short', timeZone: 'UTC' }, { start: 5, length: 2 }),
+        headerDateFormat: this.headerDateFormat || createNativeLocaleFormatter(this.currentLocale, { year: 'numeric', timeZone: 'UTC' }, { length: 4 }),
       }
     },
     defaultTitleDateFormatter (): DatePickerMultipleFormatter {
@@ -158,13 +187,13 @@ export default mixins(
         dateClick: this.dateClick,
         monthClick: this.monthClick,
         yearClick: this.yearClick,
-        formatters: this.computedFormatters,
         value: this.internalDate,
         activePicker: this.internalActivePicker,
         updateActivePicker: this.updateActivePicker,
         pickerDate: this.internalPickerDate,
         updatePickerDate: this.updatePickerDate,
         multiple: this.multiple,
+        ...this.computedFormatters,
       }
     },
   },

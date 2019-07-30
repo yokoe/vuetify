@@ -93,6 +93,7 @@ export default mixins(
           dark: this.dark,
           disabled,
           icon: true,
+          small: true,
           light: this.light,
         },
         nativeOn: {

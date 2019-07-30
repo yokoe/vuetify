@@ -62,6 +62,7 @@ export default Vue.extend({
     value: {
       handler (val: string) {
         // TODO: Check against malformed input?
+        if (!val) return
 
         const [date, time] = val.split(' ')
         this.internalDate = date
@@ -82,7 +83,7 @@ export default Vue.extend({
         props: {
           value: this.mode,
           grow: true,
-          dark: true,
+          dark: this.dark,
         },
         on: {
           change: (v: any) => this.mode = v,
@@ -94,12 +95,10 @@ export default Vue.extend({
       // TODO: We need some sane defaults here because
       // scoped data props are not available on first render
       const dateProps = this.scopedDateProps || {
-        formatters: {
-          year: (v: string) => v,
-          titleDate: (v: string) => v,
-          landscapeTitleDate: (v: string) => v,
-          headerDate: (v: string) => v,
-        },
+        yearFormat: (v: string) => v,
+        titleDateFormat: (v: string) => v,
+        landscapeTitleDateFormat: (v: string) => v,
+        headerDateFormat: (v: string) => v,
         updateActivePicker: () => {},
       } as any
 
@@ -108,8 +107,8 @@ export default Vue.extend({
       }, [
         this.$createElement(VDatePickerTitle, {
           props: {
-            dateFormat: dateProps.formatters.titleDate,
-            yearFormat: dateProps.formatters.year,
+            dateFormat: dateProps.titleDateFormat,
+            yearFormat: dateProps.yearFormat,
             value: dateProps.value,
             disabled: this.disabled,
             readonly: this.readonly,
@@ -122,7 +121,7 @@ export default Vue.extend({
         }),
         this.$createElement(VTimePickerTitle, {
           props: {
-            isAmPm: this.timeProps.showAmPmInTitle && timeProps.isAmPm,
+            isAmPm: this.timeProps.showAmPm && timeProps.isAmPm,
             disabled: this.disabled,
             time: timeProps.time,
             period: timeProps.period,
@@ -185,7 +184,7 @@ export default Vue.extend({
           readonly: this.readonly,
           period: props.period,
           scrollable: this.timeProps.scrollable,
-          showAmPm: !this.timeProps.showAmPmInTitle,
+          showAmPm: !this.timeProps.showAmPm,
           selectMode: props.selectMode,
           size: this.width,
           time: props.time,
@@ -208,7 +207,7 @@ export default Vue.extend({
           default: (props: any) => this.genClock(props),
         },
         on: {
-          'input': (time: string) => this.internalTime = time,
+          input: (time: string) => this.internalTime = time,
         },
       })
     },

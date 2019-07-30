@@ -320,11 +320,9 @@ describe('VDatePicker.ts', () => { // eslint-disable-line max-statements
     const wrapper = mountFunction({
       propsData: {
         value: '2005-11-01',
-        formatters: {
-          headerMonth: dateFormat,
-          titleDate: dateFormat,
-          weekday: () => 'W',
-        },
+        headerMonthFormat: dateFormat,
+        titleDateFormat: dateFormat,
+        weekdayFormat: () => 'W',
       },
     })
 

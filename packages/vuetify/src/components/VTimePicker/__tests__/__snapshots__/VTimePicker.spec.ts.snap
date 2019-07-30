@@ -1,7 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`VTimePicker.ts should accept Date as value 1`] = `
-
 <div class="v-picker v-card v-picker--time theme--light">
   <div class="v-picker__title primary">
     <div class="v-time-picker-title">
@@ -136,7 +135,6 @@ exports[`VTimePicker.ts should accept Date as value 1`] = `
 `;
 
 exports[`VTimePicker.ts should change clock when clicking in title 1`] = `
-
 <div class="v-picker v-card v-picker--time theme--light">
   <div class="v-picker__title primary">
     <div class="v-time-picker-title">
@@ -265,7 +263,6 @@ exports[`VTimePicker.ts should change clock when clicking in title 1`] = `
 `;
 
 exports[`VTimePicker.ts should change clock when clicking in title 2`] = `
-
 <div class="v-picker v-card v-picker--time theme--light">
   <div class="v-picker__title primary">
     <div class="v-time-picker-title">
@@ -394,7 +391,6 @@ exports[`VTimePicker.ts should change clock when clicking in title 2`] = `
 `;
 
 exports[`VTimePicker.ts should change time based on format 1`] = `
-
 <div class="v-picker v-card v-picker--time theme--light">
   <div class="v-picker__title primary">
     <div class="v-time-picker-title">
@@ -523,7 +519,6 @@ exports[`VTimePicker.ts should change time based on format 1`] = `
 `;
 
 exports[`VTimePicker.ts should change time based on format 2`] = `
-
 <div class="v-picker v-card v-picker--time theme--light">
   <div class="v-picker__title primary">
     <div class="v-time-picker-title">
@@ -728,7 +723,6 @@ exports[`VTimePicker.ts should change time based on format 2`] = `
 `;
 
 exports[`VTimePicker.ts should hide title 1`] = `
-
 <div class="v-picker v-card v-picker--time theme--light">
   <div class="v-picker__body v-picker__body--no-title theme--light"
        style="width: 290px;"
@@ -842,7 +836,6 @@ exports[`VTimePicker.ts should hide title 1`] = `
 `;
 
 exports[`VTimePicker.ts should render a time 1`] = `
-
 <div class="v-picker v-card v-picker--time theme--light">
   <div class="v-picker__title primary">
     <div class="v-time-picker-title">
@@ -971,7 +964,6 @@ exports[`VTimePicker.ts should render a time 1`] = `
 `;
 
 exports[`VTimePicker.ts should render a time in 24hr format 1`] = `
-
 <div class="v-picker v-card v-picker--time theme--light">
   <div class="v-picker__title primary">
     <div class="v-time-picker-title">
@@ -1176,7 +1168,6 @@ exports[`VTimePicker.ts should render a time in 24hr format 1`] = `
 `;
 
 exports[`VTimePicker.ts should render a time in landscape 1`] = `
-
 <div class="v-picker v-card v-picker--time v-picker--landscape theme--light">
   <div class="v-picker__title v-picker__title--landscape primary">
     <div class="v-time-picker-title">
@@ -1305,7 +1296,6 @@ exports[`VTimePicker.ts should render a time in landscape 1`] = `
 `;
 
 exports[`VTimePicker.ts should render a time with seconds 1`] = `
-
 <div class="v-picker v-card v-picker--time theme--light">
   <div class="v-picker__title primary">
     <div class="v-time-picker-title">
@@ -1440,7 +1430,6 @@ exports[`VTimePicker.ts should render a time with seconds 1`] = `
 `;
 
 exports[`VTimePicker.ts should render colored time picker 1`] = `
-
 <div class="v-picker v-card v-picker--time theme--light">
   <div class="v-picker__title orange darken-1">
     <div class="v-time-picker-title">
@@ -1569,7 +1558,6 @@ exports[`VTimePicker.ts should render colored time picker 1`] = `
 `;
 
 exports[`VTimePicker.ts should render colored time picker, header 1`] = `
-
 <div class="v-picker v-card v-picker--time theme--light">
   <div class="v-picker__title orange darken-1">
     <div class="v-time-picker-title">
@@ -1698,7 +1686,6 @@ exports[`VTimePicker.ts should render colored time picker, header 1`] = `
 `;
 
 exports[`VTimePicker.ts should render dark time picker 1`] = `
-
 <div class="v-picker v-card v-picker--time theme--dark">
   <div class="v-picker__title">
     <div class="v-time-picker-title">
@@ -1827,7 +1814,6 @@ exports[`VTimePicker.ts should render dark time picker 1`] = `
 `;
 
 exports[`VTimePickerClock.ts should render hours in 24hr format 1`] = `
-
 <div class="v-time-picker-clock v-time-picker-clock--indeterminate theme--light">
   <div class="v-time-picker-clock__outer">
     <div class="v-time-picker-clock__inner">
@@ -2006,11 +1992,9 @@ exports[`VTimePickerClock.ts should render hours in 24hr format 1`] = `
     </div>
   </div>
 </div>
-
 `;
 
 exports[`VTimePickerClock.ts should render hours in ampm format 1`] = `
-
 <div class="v-time-picker-clock v-time-picker-clock--indeterminate theme--light">
   <div class="v-time-picker-clock__outer">
     <div class="v-time-picker-clock__inner">

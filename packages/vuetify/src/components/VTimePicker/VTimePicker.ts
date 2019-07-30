@@ -22,7 +22,7 @@ export default Vue.extend({
     readonly: Boolean,
     disabled: Boolean,
     scrollable: Boolean,
-    showAmPmInTitle: Boolean,
+    showAmPm: Boolean,
   },
 
   methods: {
@@ -39,7 +39,7 @@ export default Vue.extend({
           readonly: this.readonly,
           period: props.period,
           scrollable: this.scrollable,
-          showAmPm: !this.showAmPmInTitle,
+          showAmPm: !this.showAmPm,
           selectMode: props.selectMode,
           size: this.width,
           time: props.time,
@@ -63,7 +63,7 @@ export default Vue.extend({
           period: props.period,
           readonly: this.readonly,
           selectMode: props.selectMode,
-          showAmPm: this.showAmPmInTitle,
+          showAmPm: this.showAmPm,
           time: props.time,
           useSeconds: props.useSeconds,
         },
@@ -89,7 +89,9 @@ export default Vue.extend({
   render (h): VNode {
     return h(VTime, {
       props: {
-        allowed: this.allowed,
+        allowedHours: this.allowedHours,
+        allowedMinutes: this.allowedMinutes,
+        allowedSeconds: this.allowedSeconds,
         format: this.format,
         min: this.min,
         max: this.max,

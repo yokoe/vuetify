@@ -6,7 +6,7 @@
         <v-checkbox v-model="ampmInTitle" label="Show AM/PM in title"></v-checkbox>
       </v-flex>
       <v-flex>
-        <v-time-picker v-model="time" :landscape="landscape" :show-am-pm-in-title="ampmInTitle"></v-time-picker>
+        <v-time-picker v-model="time" :landscape="landscape" :show-am-pm="ampmInTitle"></v-time-picker>
       </v-flex>
     </v-layout>
   </v-container>

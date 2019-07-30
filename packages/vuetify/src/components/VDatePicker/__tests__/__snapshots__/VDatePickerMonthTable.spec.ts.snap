@@ -251,7 +251,6 @@ exports[`VDatePickerMonthTable.ts should render component and match snapshot 1`]
 `;
 
 exports[`VDatePickerMonthTable.ts should render component with disabled months and match snapshot 1`] = `
-
 <div class="v-date-picker-table v-date-picker-table--month theme--light">
   <table>
     <tbody>
@@ -384,7 +383,6 @@ exports[`VDatePickerMonthTable.ts should render component with disabled months a
     </tbody>
   </table>
 </div>
-
 `;
 
 exports[`VDatePickerMonthTable.ts should render component with events (array) and match snapshot 1`] = `

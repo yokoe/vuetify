@@ -1,23 +1,19 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`VDatePickerYears.ts should format years 1`] = `
-
 <ul class="v-date-picker-years">
   <li>
     (1001)
   </li>
 </ul>
-
 `;
 
 exports[`VDatePickerYears.ts should not allow min to be greater then max 1`] = `
-
 <ul class="v-date-picker-years">
   <li>
     1234
   </li>
 </ul>
-
 `;
 
 exports[`VDatePickerYears.ts should render component and match snapshot 1`] = `
@@ -629,7 +625,6 @@ exports[`VDatePickerYears.ts should render component and match snapshot 1`] = `
 `;
 
 exports[`VDatePickerYears.ts should respect min/max props 1`] = `
-
 <ul class="v-date-picker-years">
   <li>
     2010
@@ -695,5 +690,4 @@ exports[`VDatePickerYears.ts should respect min/max props 1`] = `
     1990
   </li>
 </ul>
-
 `;

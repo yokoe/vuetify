@@ -23,7 +23,7 @@ export default Vue.extend({
 
     return h('div', {
       staticClass: staticClass.trim(),
-      'class': {
+      class: {
         'v-picker__title__btn--active': props.active,
         'v-picker__title__btn--readonly': props.readonly,
       },

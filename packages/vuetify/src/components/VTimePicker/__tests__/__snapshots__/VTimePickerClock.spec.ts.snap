@@ -1,7 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`VTimePickerClock.ts should render hours in 24hr format 1`] = `
-
 <div class="v-time-picker-clock v-time-picker-clock--indeterminate theme--light">
   <div class="v-time-picker-clock__outer">
     <div class="v-time-picker-clock__inner">
@@ -183,7 +182,6 @@ exports[`VTimePickerClock.ts should render hours in 24hr format 1`] = `
 `;
 
 exports[`VTimePickerClock.ts should render hours in ampm format 1`] = `
-
 <div class="v-time-picker-clock v-time-picker-clock--indeterminate theme--light">
   <div class="v-time-picker-clock__outer">
     <div class="v-time-picker-clock__inner">

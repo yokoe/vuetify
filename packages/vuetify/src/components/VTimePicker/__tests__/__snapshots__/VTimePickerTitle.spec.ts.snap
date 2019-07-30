@@ -1,7 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`VTimePickerTitle.ts should render ampm buttons 1`] = `
-
 <div class="v-time-picker-title">
   <div class="v-time-picker-title__time">
     <div class="v-picker__title__btn">
@@ -42,7 +41,6 @@ exports[`VTimePickerTitle.ts should render component in 24hr 1`] = `
 `;
 
 exports[`VTimePickerTitle.ts should render component in ampm 1`] = `
-
 <div class="v-time-picker-title">
   <div class="v-time-picker-title__time">
     <div class="v-picker__title__btn">
@@ -59,7 +57,6 @@ exports[`VTimePickerTitle.ts should render component in ampm 1`] = `
 `;
 
 exports[`VTimePickerTitle.ts should render disabled component 1`] = `
-
 <div class="v-time-picker-title">
   <div class="v-time-picker-title__time">
     <div class="v-picker__title__btn v-picker__title__btn--readonly">
@@ -76,7 +73,6 @@ exports[`VTimePickerTitle.ts should render disabled component 1`] = `
 `;
 
 exports[`VTimePickerTitle.ts should render seconds 1`] = `
-
 <div class="v-time-picker-title">
   <div class="v-time-picker-title__time">
     <div class="v-picker__title__btn">
@@ -99,7 +95,6 @@ exports[`VTimePickerTitle.ts should render seconds 1`] = `
 `;
 
 exports[`VTimePickerTitle.ts should render with selectMode from mount 1`] = `
-
 <div class="v-time-picker-title">
   <div class="v-time-picker-title__time">
     <div class="v-picker__title__btn">
