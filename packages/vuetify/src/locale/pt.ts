@@ -1,7 +1,6 @@
 export default {
   close: 'Close',
   dataIterator: {
-    pageText: '{0}-{1} de {2}',
     noResultsText: 'Nenhum dado encontrado',
     loadingText: 'Carregando itens...',
   },
@@ -20,6 +19,7 @@ export default {
     prevPage: 'Página anterior',
     firstPage: 'Página primeira',
     lastPage: 'Página última',
+    pageText: '{0}-{1} de {2}',
   },
   datePicker: {
     itemsSelected: '{0} selecionados',

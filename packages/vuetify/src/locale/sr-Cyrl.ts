@@ -1,7 +1,6 @@
 export default {
   close: 'Close',
   dataIterator: {
-    pageText: '{0}-{1} од {2}',
     noResultsText: 'Ни један запис није пронађен',
     loadingText: 'Loading item...',
   },
@@ -20,6 +19,7 @@ export default {
     prevPage: 'Претходна страница',
     firstPage: 'Прва страница',
     lastPage: 'Последња страница',
+    pageText: '{0}-{1} од {2}',
   },
   datePicker: {
     itemsSelected: '{0} одабрано',

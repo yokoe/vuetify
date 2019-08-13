@@ -1,7 +1,6 @@
 export default {
   close: 'Close',
   dataIterator: {
-    pageText: '{0}-{1} 共 {2} 条',
     noResultsText: '没有找到匹配记录',
     loadingText: 'Loading items...',
   },
@@ -20,6 +19,7 @@ export default {
     prevPage: '上一页',
     firstPage: '第一页',
     lastPage: '最后一页',
+    pageText: '{0}-{1} 共 {2} 条',
   },
   datePicker: {
     itemsSelected: '{0}选中',

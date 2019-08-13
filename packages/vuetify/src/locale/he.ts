@@ -1,7 +1,6 @@
 export default {
   close: 'Close',
   dataIterator: {
-    pageText: '{0}-{1} מתוך {2}',
     noResultsText: 'לא נמצאו תוצאות מתאימות',
     loadingText: 'Loading item...',
   },
@@ -20,6 +19,7 @@ export default {
     prevPage: 'עמוד הקודם',
     firstPage: 'עמוד ראשון',
     lastPage: 'עמוד אחרון',
+    pageText: '{0}-{1} מתוך {2}',
   },
   datePicker: {
     itemsSelected: '{0} נבחרו',

@@ -1,7 +1,6 @@
 export default {
   close: 'Close',
   dataIterator: {
-    pageText: '{0}-{1} από {2}',
     noResultsText: 'Δε βρέθηκαν αποτελέσματα',
     loadingText: 'Loading item...',
   },
@@ -20,6 +19,7 @@ export default {
     prevPage: 'Προηγούμενη σελίδα',
     firstPage: 'Πρώτη σελίδα',
     lastPage: 'Τελευταία σελίδα',
+    pageText: '{0}-{1} από {2}',
   },
   datePicker: {
     itemsSelected: '{0} επιλεγμένα',

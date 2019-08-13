@@ -1,7 +1,6 @@
 export default {
   close: 'Aizvērt',
   dataIterator: {
-    pageText: '{0}-{1} no {2}',
     noResultsText: 'Nekas netika atrasts',
     loadingText: 'Ielādē...',
   },
@@ -20,6 +19,7 @@ export default {
     prevPage: 'Iepriekšējā lapa',
     firstPage: 'Pirmā lapa',
     lastPage: 'Pēdējā lapa',
+    pageText: '{0}-{1} no {2}',
   },
   datePicker: {
     itemsSelected: '{0} izvēlēts',

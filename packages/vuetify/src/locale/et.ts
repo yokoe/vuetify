@@ -1,7 +1,6 @@
 export default {
   close: 'Close',
   dataIterator: {
-    pageText: '{0}-{1} {2}st',
     noResultsText: 'Vastavaid kirjeid ei leitud',
     loadingText: 'Loading item...',
   },
@@ -20,6 +19,7 @@ export default {
     prevPage: 'Eelmine lehekülg',
     firstPage: 'Esimene lehekülg',
     lastPage: 'Viimane lehekülg',
+    pageText: '{0}-{1} {2}st',
   },
   datePicker: {
     itemsSelected: '{0} valitud',

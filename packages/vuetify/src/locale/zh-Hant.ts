@@ -1,7 +1,6 @@
 export default {
   close: 'Close',
   dataIterator: {
-    pageText: '{0}-{1} 共 {2} 條',
     noResultsText: '沒有找到匹配記錄',
     loadingText: 'Loading items...',
   },
@@ -20,6 +19,7 @@ export default {
     prevPage: '上一頁',
     firstPage: '第一頁',
     lastPage: '最後一頁',
+    pageText: '{0}-{1} 共 {2} 條',
   },
   datePicker: {
     itemsSelected: '{0}選中',

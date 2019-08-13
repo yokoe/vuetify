@@ -1,7 +1,6 @@
 export default {
   close: 'Close',
   dataIterator: {
-    pageText: '{0}-{1} dari {2}',
     noResultsText: 'Tidak ditemukan catatan yang cocok',
     loadingText: 'Loading item...',
   },
@@ -20,6 +19,7 @@ export default {
     prevPage: 'Halaman sebelumnya',
     firstPage: 'Halaman pertama',
     lastPage: 'Halaman terakhir',
+    pageText: '{0}-{1} dari {2}',
   },
   datePicker: {
     itemsSelected: '{0} dipilih',
