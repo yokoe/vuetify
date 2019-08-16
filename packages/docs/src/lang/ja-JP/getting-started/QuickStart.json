@@ -5,8 +5,13 @@
   "cdnHeader": "## CDNの利用",
   "newHeader": "## 新しいアプリケーション",
   "existingHeader": "## 既存のアプリケーション",
+  "existingHeader3a": "### vuetify-loaderでのインストール",
+  "existingHeader3b": "### アラカルトインストール",
+  "existingHeader3c": "### フルインストール",
+  "webpackHeader1": "### Webpackでのインストール",
   "existingHeader4": "## Vuetifyオブジェクトのブートストラップ",
   "existingHeader5": "## フォントのインストール",
+  "existingHeader7": "### MDI Iconfont",
   "edgeHeader": "## Edgeのサポート",
   "ie11Header": "## IE11とSafari 9のサポート"
 }
