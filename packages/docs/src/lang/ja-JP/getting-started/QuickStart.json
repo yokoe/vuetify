@@ -9,6 +9,7 @@
   "vueCliText7": "インストールが完了したら、<kbd>yarn serve</kbd> あるいは <kbd>npm run serve</kbd> を実行してアプリケーションをスタートしましょう。",
   "uiHeader": "## Vue UI上でのインストール",
   "browserHeader": "## サポートしているブラウザ",
+  "browserText": "Vuetifyは、Web開発を次のレベルに押し上げる先進的なフレームワークです。そのため、古いInternet Explorerのサポートを多少犠牲にせざるを得ませんでした。完全なリストではありませんが、主なブラウザのサポート状況は下記の通りです。",
   "cdnHeader": "## CDNの利用",
   "newHeader": "## 新しいアプリケーション",
   "existingHeader": "## 既存のアプリケーション",
