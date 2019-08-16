@@ -1,1 +1,12 @@
-{}
+{
+  "headerText": "Vuetify Vue CLIパッケージ _(オフィシャルのサンプルがベースになっています)_ の一つを使って、すぐにプロジェクトを開始しましょう。Vuetifyは **SSR** (server-side rendering), **SPA** (single page application), **PWA** (progressive web application) そして通常の **HTML** をサポートしています。",
+  "uiHeader": "## Vue UI上でのインストール",
+  "browserHeader": "## サポートしているブラウザ",
+  "cdnHeader": "## CDNの利用",
+  "newHeader": "## 新しいアプリケーション",
+  "existingHeader": "## 既存のアプリケーション",
+  "existingHeader4": "## Vuetifyオブジェクトのブートストラップ",
+  "existingHeader5": "## フォントのインストール",
+  "edgeHeader": "## Edgeのサポート",
+  "ie11Header": "## IE11とSafari 9のサポート"
+}
