@@ -1,4 +1,5 @@
 {
+  "header": "# クイックスタート",
   "headerText": "Vuetify Vue CLIパッケージ _(オフィシャルのサンプルがベースになっています)_ の一つを使って、すぐにプロジェクトを開始しましょう。Vuetifyは **SSR** (server-side rendering), **SPA** (single page application), **PWA** (progressive web application) そして通常の **HTML** をサポートしています。",
   "vueCliText1": "Vue CLI 3は、より簡単に開発を開始可能にする次世代のCLIツールです。Vue CLI 3を使ってアプリケーションを作ると、公式のwebpackアップデートとコンフィグの変更が利用可能になり、面倒なアップグレード作業をやらずにVuetifyを更新できるようになります。",
   "vueCliText2": "Vue CLI 3の使い方は[公式ドキュメント](https://cli.vuejs.org/guide/)を参照してください。",
