@@ -32,6 +32,7 @@
   "webpackText1": "**フル** / **A-la-carte**いずれの場合でも、Webpackを使ってアプリケーションの設定をすることができます。ただし、sassファイル用のルールを追加(あるいは既存のものを変更)する必要があります。まずは、必要な依存パッケージをインストールしましょう:",
   "webpackText2": "インストールが終わったら、`webpack.config.js`の**rules**に下のスニペットをコピーします。すでに**sass**のルールを設定している時は、下記のスニペットの一部あるいは全てを適用する必要があるかもしれません。**vuetify-loader**の利用を考えている場合は、[A-la-carte](/customization/a-la-carte#vueconfigjs-installation)にWebpackとあわせて利用する際の情報が記述されています。",
   "existingHeader4": "## Vuetifyオブジェクトのブートストラップ",
+  "existingText4": "`src/plugins/vuetify.js`でVuetifyの設定をしたら、それをVueインスタンスに渡してあげます。この処理の流れは **vue-router** や **vuex** と同様です。",
   "existingHeader5": "## フォントのインストール",
   "existingHeader7": "### MDI Iconfont",
   "edgeHeader": "## Edgeのサポート",
