@@ -14,6 +14,7 @@
   "browserHeader": "## サポートしているブラウザ",
   "browserText": "Vuetifyは、Web開発を次のレベルに押し上げる先進的なフレームワークです。そのため、古いInternet Explorerのサポートを多少犠牲にせざるを得ませんでした。完全なリストではありませんが、主なブラウザのサポート状況は下記の通りです。",
   "cdnHeader": "## CDNの利用",
+  "cdnText": "Vue CLIのテンプレートを使わずにVuetify.jsを試すには、下記のコードを`index.html`に貼り付けてください。最新のVueとVuetifyを使って、コンポーネントを試すことができます。codepenの[Vuetify starter](https://template.vuetifyjs.com)を使うこともできます。おすすめはされていませんが、もし本番環境でCDNパッケージを利用する場合は、アセットのバージョンを指定するようにしましょう。詳しいやり方は[jsdelivr](https://www.jsdelivr.com/)を参照してください。",
   "newHeader": "## 新しいアプリケーション",
   "existingHeader": "## 既存のアプリケーション",
   "existingAlert": "あなたのアプリケーションがVue CLI 3を使っている場合は、 [こちらのガイド](#new-applications)にしたがってVuetifyパッケージをインストールしてください。",
