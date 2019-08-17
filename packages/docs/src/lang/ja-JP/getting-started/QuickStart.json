@@ -34,7 +34,12 @@
   "existingHeader4": "## Vuetifyオブジェクトのブートストラップ",
   "existingText4": "`src/plugins/vuetify.js`でVuetifyの設定をしたら、それをVueインスタンスに渡してあげます。この処理の流れは **vue-router** や **vuex** と同様です。",
   "existingHeader5": "## フォントのインストール",
+  "existingText5": "Vuetifyは[Material Design Specification](https://material.io/design/typography/the-type-system.html)に基づき、Google Robotoフォントを利用します。このフォントを利用する一番簡単な方法は、メインとなる`index.html`の`<head>`に`<link>`タグを追加することです。",
+  "existingText6": "[webfontloader](https://github.com/typekit/webfontloader)を使って非同期で読み込ませることもできます。",
   "existingHeader7": "### MDI Iconfont",
+  "existingText7": "Vuetifyは標準のアイコンフォントに[Material Design Icons](https://materialdesignicons.com/)を使用します。最もシンプルなインストール方法は`npm`を使ったインストールです。",
+  "existingText8": "パッケージをインストールしたら、pluginsフォルダの`vuetify.js`内でシンプルにインポートします。",
+  "existingText9": "他のアイコンフォントの使い方やさらなる情報については[Icons](/customization/icons)を参照してください。",
   "edgeHeader": "## Edgeのサポート",
   "ie11Header": "## IE11とSafari 9のサポート"
 }
