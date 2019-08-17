@@ -42,5 +42,6 @@
   "existingText8": "パッケージをインストールしたら、pluginsフォルダの`vuetify.js`内でシンプルにインポートします。",
   "existingText9": "他のアイコンフォントの使い方やさらなる情報については[Icons](/customization/icons)を参照してください。",
   "edgeHeader": "## Edgeのサポート",
+  "edgeText1": "`vuetify/lib`はES6を使用していますが、これはEdgeブラウザ(非chromium)で問題を起こしてしまいます。また、`vuetify/lib`はVue CLI 3の**modern mode**をサポートするため、トランスパイルされません。なので、Vue CLIに`vuetify`パッケージをトランスパイルするように指示する必要があります。将来的にはこの対応は現在バグフィックスのため保留になっているvue-cli-plugin-vuetifyによって自動的に行われるようになる予定です。",
   "ie11Header": "## IE11とSafari 9のサポート"
 }
